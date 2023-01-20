@@ -4,7 +4,7 @@ import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import {useEffect, useState} from "react";
-import {DriverApi} from "../api/driver";
+import {ClientApi} from "../api/client";
 
 interface IClient{
 
@@ -14,7 +14,7 @@ export default function Clients({ navigation }: RootTabScreenProps<'Clients'>) {
 
   useEffect( () => {
     (async () => {
-      // const clientData = await DriverApi.getClientsData()
+       const clientData = await ClientApi.getClientsData()
       // setData(clientData)
     })()
   },[])
