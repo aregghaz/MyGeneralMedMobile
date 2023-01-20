@@ -3,8 +3,21 @@ import { StyleSheet } from 'react-native';
 import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
+import {useEffect, useState} from "react";
+import {DriverApi} from "../api/driver";
 
+interface IClient{
+
+}
 export default function Clients({ navigation }: RootTabScreenProps<'Clients'>) {
+  const [data, setData] = useState<Array<IClient>>([])
+
+  useEffect( () => {
+    (async () => {
+      const clientData = await DriverApi.getClientsData()
+      setData(clientData)
+    })()
+  },[])
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Clients</Text>
