@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "mygeneralmed",
-    "slug": "mygeneralmed",
+    "slug": "mygeneralmedapp",
     "owner": "mygeneralmed",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -20,16 +20,23 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.aregghaz.mygeneralmedapp"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.aregghaz.mygeneralmedapp"
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "a1529bb9-603f-4851-81b2-e7c1ce63b955"
+      }
     }
   }
 }
