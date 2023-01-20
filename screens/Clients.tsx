@@ -14,8 +14,8 @@ export default function Clients({ navigation }: RootTabScreenProps<'Clients'>) {
 
   useEffect( () => {
     (async () => {
-      const clientData = await DriverApi.getClientsData()
-      setData(clientData)
+      // const clientData = await DriverApi.getClientsData()
+      // setData(clientData)
     })()
   },[])
   return (
