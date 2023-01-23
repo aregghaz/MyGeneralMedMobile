@@ -1,110 +1,199 @@
-import {Animated, FlatList, StatusBar, StyleSheet} from 'react-native';
-import {Text, View} from '../components/Themed';
-import {useEffect, useRef, useState} from "react";
-import {ClientApi} from "../api/client";
+import React, {useRef} from 'react';
+import {
+    SafeAreaView,
+    View,
+    TextInput,
+    Image,
+    StyleSheet,
+    ScrollView,
+    StatusBar,
+    Animated,
+} from 'react-native';
+import {getFeatureViewAnimation} from '../utils';
 
-interface IClient {
-    id: string;
-    name: string;
-    surname: string;
-    appointment_time: string;
-    origin_name: string;
-    destination_name: string;
-    destination_street: string;
-    destination_suite: string;
-    origin_street: string;
-    origin_suite: string;
+const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 
-}
-const ITEM_SIZE = 160
+const UPPER_HEADER_HEIGHT = 32;
+const UPPER_HEADER_PADDING_TOP = 4;
+const LOWER_HEADER_HEIGHT = 96;
+
 export default function Clients() {
-    const [dataClient, setData] = useState<Array<IClient>>([])
-    const scrollY = useRef(new Animated.Value(0)).current
-    useEffect(() => {
-        (async () => {
-            const clientData = await ClientApi.getClientsData()
-            console.log(clientData, 'clientData')
-            setData(clientData.clients)
-        })()
-    }, [])
-    const AnimatedHeaderValue =new Animated.Value(0)
-    const animateHeaderHeight = scrollY.interpolate({
-        inputRange:[0,136-50],
-        outputRange:[136,50],
-        extrapolate:'clamp'
-    })
-    const animateHeaderHeight2 = scrollY.interpolate({
-        inputRange:[0,136-50],
-        outputRange:['blue','red'],
-        extrapolate:'clamp'
-    })
+    const animatedValue = useRef(new Animated.Value(0)).current;
+    const scrollViewRef = useRef<ScrollView>(null);
+    const lastOffsetY = useRef(0);
+    const scrollDirection = useRef('');
+
+    const depositViewAnimation = getFeatureViewAnimation(animatedValue, 36);
+    const withdrawViewAnimation = getFeatureViewAnimation(animatedValue, -16);
+    const qrViewAnimation = getFeatureViewAnimation(animatedValue, -56);
+    const scanViewAnimation = getFeatureViewAnimation(animatedValue, -92);
+
+    const featureIconCircleAnimation = {
+        opacity: animatedValue.interpolate({
+            inputRange: [0, 25],
+            outputRange: [1, 0],
+            extrapolate: 'clamp',
+        }),
+    };
+    const featureNameAnimation = {
+        transform: [
+            {
+                scale: animatedValue.interpolate({
+                    inputRange: [0, 30],
+                    outputRange: [1, 0],
+                    extrapolate: 'clamp',
+                }),
+            },
+        ],
+        opacity: animatedValue.interpolate({
+            inputRange: [0, 30],
+            outputRange: [1, 0],
+            extrapolate: 'clamp',
+        }),
+    };
+    const featureIconAnimation = {
+        opacity: animatedValue.interpolate({
+            inputRange: [0, 50],
+            outputRange: [0, 1],
+            extrapolate: 'clamp',
+        }),
+    };
+
+    const textInputAnimation = {
+        transform: [
+            {
+                scaleX: animatedValue.interpolate({
+                    inputRange: [0, 50],
+                    outputRange: [1, 0],
+                    extrapolate: 'clamp',
+                }),
+            },
+            {
+                translateX: animatedValue.interpolate({
+                    inputRange: [0, 25],
+                    outputRange: [0, -100],
+                    extrapolate: 'clamp',
+                }),
+            },
+        ],
+        opacity: animatedValue.interpolate({
+            inputRange: [0, 25],
+            outputRange: [1, 0],
+            extrapolate: 'clamp',
+        }),
+    };
+
     return (
         <View style={styles.container}>
-            <Animated.View style={[styles.header,{
-                height:animateHeaderHeight,
-                backgroundColor:animateHeaderHeight2
-            }]}>
-                <Text style={styles.headerText}>jhkhk</Text>
-            </Animated.View>
-            <Animated.FlatList
-                data={dataClient}
-                onScroll={Animated.event([{
-                        nativeEvent: {contentOffset: {y: scrollY}}
-                    }],
-                    {useNativeDriver: false}
-                )}
-                keyExtractor={item => item.id}
-               //  contentContainerStyle={{padding:10}}
-                renderItem={({item, index}) => {
-                    const inputRange =[
-                        -1,
-                        0,
-                        ITEM_SIZE * index,
-                        ITEM_SIZE * (index+2),
-                    ]
-                    const opacityRange =[
-                        -1,
-                        0,
-                        ITEM_SIZE * index,
-                        ITEM_SIZE * (index+1),
-                    ]
-                    const scale = scrollY.interpolate({
-                        inputRange,
-                        outputRange:[1,1,1,0]
-                    })
-                    const opacity = scrollY.interpolate({
-                        inputRange:opacityRange,
-                        outputRange:[1,1,1,0]
-                    })
-                    return <Animated.View style={{
-                        // height:30,
-                        borderRadius: 15,
-                        backgroundColor:"white",
-                        shadowColor: "#000",
-                        shadowOffset: {
-                            width: 0,
-                            height: 10
-                        },
-                        transform:[{scale}],
-                        padding: 20,
-                        margin: 10,
-                        opacity,
-                        shadowOpacity: .3,
-                        shadowRadius: 20
-                    }}>
-                        <Text style={styles.listText}>{item.name + ' ' + item.surname}</Text>
-                        <Text style={styles.listText}>{item.appointment_time}</Text>
-                        <Text style={styles.listText}>{item.origin_name}</Text>
-                        <Text style={styles.listText}>{item.origin_street}</Text>
-                        <Text style={styles.listText}>{item.origin_suite}</Text>
+            <StatusBar barStyle="light-content" />
 
+            <SafeAreaView>
+                <View style={styles.upperHeaderPlaceholder} />
+            </SafeAreaView>
 
-                        {/*<Text style={styles.listText}>{item.id}</Text>*/}
+            <SafeAreaView style={styles.header}>
+                <View style={styles.upperHeader}>
+                    <View style={styles.searchContainer}>
+                        <Image
+                            source={require('../assets/images/search.png')}
+                            style={[styles.icon16, {marginLeft: 8}]}
+                        />
+                        <AnimatedTextInput
+                            placeholder="Tìm kiếm"
+                            placeholderTextColor="rgba(255, 255, 255, 0.8)"
+                            style={[styles.searchInput, textInputAnimation]}
+                        />
+                    </View>
 
+                    <Image
+                        source={require('../assets/images/bell.png')}
+                        style={styles.bell}
+                    />
+                    <Image
+                        source={require('../assets/images/avatar.png')}
+                        style={styles.avatar}
+                    />
+                </View>
+
+                <View style={[styles.lowerHeader]}>
+                    <Animated.View style={[styles.feature, depositViewAnimation]}>
+                        <Animated.Image
+                            source={require('../assets/images/deposit.png')}
+                            style={[styles.featureIcon, featureIconAnimation]}
+                        />
+                        <Animated.Image
+                            source={require('../assets/images/deposit-circle.png')}
+                            style={[styles.icon32, featureIconCircleAnimation]}
+                        />
+                        <Animated.Text style={[styles.featureName, featureNameAnimation]}>
+                            NẠP TIỀN
+                        </Animated.Text>
                     </Animated.View>
-                }}
-            />
 
+                    <Animated.View style={[styles.feature, withdrawViewAnimation]}>
+                        <Animated.Image
+                            source={require('../assets/images/withdraw.png')}
+                            style={[styles.featureIcon, featureIconAnimation]}
+                        />
+                        <Animated.Image
+                            source={require('../assets/images/withdraw-circle.png')}
+                            style={[styles.icon32, featureIconCircleAnimation]}
+                        />
+                        <Animated.Text style={[styles.featureName, featureNameAnimation]}>
+                            RÚT TIỀN
+                        </Animated.Text>
+                    </Animated.View>
+
+                    <Animated.View style={[styles.feature, qrViewAnimation]}>
+                        <Animated.Image
+                            source={require('../assets/images/qr.png')}
+                            style={[styles.featureIcon, featureIconAnimation]}
+                        />
+                        <Animated.Image
+                            source={require('../assets/images/qr-circle.png')}
+                            style={[styles.icon32, featureIconCircleAnimation]}
+                        />
+                        <Animated.Text style={[styles.featureName, featureNameAnimation]}>
+                            MÃ QR
+                        </Animated.Text>
+                    </Animated.View>
+
+                    <Animated.View style={[styles.feature, scanViewAnimation]}>
+                        <Animated.Image
+                            source={require('../assets/images/scan.png')}
+                            style={[styles.featureIcon, featureIconAnimation]}
+                        />
+                        <Animated.Image
+                            source={require('../assets/images/scan-circle.png')}
+                            style={[styles.icon32, featureIconCircleAnimation]}
+                        />
+                        <Animated.Text style={[styles.featureName, featureNameAnimation]}>
+                            QUÉT MÃ
+                        </Animated.Text>
+                    </Animated.View>
+                </View>
+            </SafeAreaView>
+
+            <ScrollView
+                showsVerticalScrollIndicator={false}
+                ref={scrollViewRef}
+                onScroll={e => {
+                    const offsetY = e.nativeEvent.contentOffset.y;
+                    scrollDirection.current =
+                        offsetY - lastOffsetY.current > 0 ? 'down' : 'up';
+                    lastOffsetY.current = offsetY;
+                    animatedValue.setValue(offsetY);
+                }}
+                onScrollEndDrag={() => {
+                    scrollViewRef.current?.scrollTo({
+                        y: scrollDirection.current === 'down' ? 100 : 0,
+                        animated: true,
+                    });
+                }}
+                scrollEventThrottle={16}>
+                <View style={styles.spaceForHeader} />
+                <View style={styles.scrollViewContent} />
+            </ScrollView>
         </View>
     );
 }
@@ -112,25 +201,83 @@ export default function Clients() {
 
 const styles = StyleSheet.create({
     container: {
-        flex:1,
-       /// flexDirection: 'row',
-        backgroundColor:"#4466b0"
+        flex: 1,
     },
-    title: {
-        fontSize: 20,
+    icon16: {
+        width: 16,
+        height: 16,
+    },
+    icon32: {
+        width: 32,
+        height: 32,
+    },
+    upperHeaderPlaceholder: {
+        height: UPPER_HEADER_HEIGHT + UPPER_HEADER_PADDING_TOP,
+        paddingTop: UPPER_HEADER_PADDING_TOP,
+    },
+    header: {
+        position: 'absolute',
+        width: '100%',
+        backgroundColor: '#AF0C6E',
+    },
+    upperHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 16,
+        height: UPPER_HEADER_HEIGHT + UPPER_HEADER_PADDING_TOP,
+        paddingTop: UPPER_HEADER_PADDING_TOP,
+    },
+    searchContainer: {
+        flex: 1,
+        justifyContent: 'center',
+    },
+    featureIcon: {
+        width: 16,
+        height: 16,
+        position: 'absolute',
+        top: 8,
+    },
+    bell: {
+        width: 16,
+        height: 16,
+        marginHorizontal: 32,
+    },
+    avatar: {
+        width: 28,
+        height: 28,
+    },
+    lowerHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
+        height: LOWER_HEADER_HEIGHT,
+        paddingHorizontal: 16,
+    },
+    searchInput: {
+        position: 'absolute',
+        width: '100%',
+        backgroundColor: 'rgba(255, 255, 255, 0.3)',
+        color: 'white',
+        borderRadius: 4,
+        paddingVertical: 4,
+        paddingLeft: 32,
+    },
+    feature: {
+        alignItems: 'center',
+    },
+    featureName: {
         fontWeight: 'bold',
+        fontSize: 12,
+        lineHeight: 14,
+        color: '#FFFFFF',
+        marginTop: 12,
     },
-
-    list: {
+    spaceForHeader: {
+        height: LOWER_HEADER_HEIGHT,
     },
-    headerText:{
-        marginTop:20,
-        textAlign:"center",
-        justifyContent:"center"
-
+    scrollViewContent: {
+        height: 1000,
+        backgroundColor: 'white',
     },
-    header:{},
-    listText: {
-      height:20
-    }
 });
