@@ -1,4 +1,3 @@
-
 /**
  * If you are not familiar with React Navigation, refer to the "Fundamentals" guide:
  * https://reactnavigation.org/docs/getting-started
@@ -23,7 +22,6 @@ import SettingsComponent from "../assets/images/Settings";
 import Login from "../screens/LoginScreen";
 import {useEffect, useState} from "react";
 import {AuthApi} from "../api/auth";
-import {View} from "react-native";
 
 export default function Navigation({colorScheme}: { colorScheme: ColorSchemeName }) {
     return (
@@ -46,28 +44,28 @@ function RootNavigator() {
     useEffect(() => {
         checkUser()
     }, [])
-    const  checkUser = async () => {
+    const checkUser = async () => {
         try {
             const userData = await AuthApi.getUser()
             setUser(userData)
-        }catch (e){
+        } catch (e) {
             setUser(null)
         }
     }
-    if (user === null) {
-        return (<View style={{flex: 1, justifyContent: 'center', alignItems: "center"}}>
-            <ActivityIndicator/>
-        </View>)
-    }
+    // if (user === null) {
+    //     return (<View style={{flex: 1, justifyContent: 'center', alignItems: "center"}}>
+    //         <ActivityIndicator/>
+    //     </View>)
+    // }
     return (
         <Stack.Navigator>
-            {user? <>
-                <Stack.Screen name="Home" component={BottomTabNavigator} options={{headerShown: false}}/>
-                <Stack.Screen name="NotFound" component={NotFoundScreen} options={{title: 'Oops!'}}/>
-                <Stack.Group screenOptions={{presentation: 'modal'}}>
-                    <Stack.Screen name="Modal" component={ModalScreen}/>
-                </Stack.Group>
-            </> : <Stack.Screen name="Login" component={Login} options={{headerShown: false}}/>}
+            <Stack.Screen name="Login" component={Login} options={{headerShown: false}}/>
+            <Stack.Screen name="Home" component={BottomTabNavigator} options={{headerShown: false}}/>
+            <Stack.Screen name="NotFound" component={NotFoundScreen} options={{title: 'Oops!'}}/>
+            <Stack.Group screenOptions={{presentation: 'modal'}}>
+                <Stack.Screen name="Modal" component={ModalScreen}/>
+            </Stack.Group>
+
         </Stack.Navigator>
     );
 }
@@ -81,7 +79,11 @@ const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 function BottomTabNavigator() {
     const colorScheme = useColorScheme();
-
+    const [open, setOpen] = useState<boolean>(false);
+    const openSearch = () => {
+        setOpen(!open);
+        ///navigation.navigate('Modal')
+    };
     return (
         <BottomTab.Navigator
             initialRouteName="Clients"
@@ -91,24 +93,7 @@ function BottomTabNavigator() {
             <BottomTab.Screen
                 name="Clients"
                 component={Clients}
-                options={({navigation}: RootTabScreenProps<'Clients'>) => ({
-                    title: 'Clients',
-                    tabBarIcon: ({color}) => <TabClientIcon name="code" color={color}/>,
-                    headerRight: () => (
-                        <Pressable
-                            onPress={() => navigation.navigate('Modal')}
-                            style={({pressed}) => ({
-                                opacity: pressed ? 0.5 : 1,
-                            })}>
-                            <FontAwesome
-                                name="info-circle"
-                                size={25}
-                                color={Colors[colorScheme].text}
-                                style={{marginRight: 15}}
-                            />
-                        </Pressable>
-                    ),
-                })}
+                options={{headerShown:false}}
             />
             <BottomTab.Screen
                 name="TabTwo"

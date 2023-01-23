@@ -1,45 +1,130 @@
-import { StyleSheet } from 'react-native';
-
-import EditScreenInfo from '../components/EditScreenInfo';
-import { Text, View } from '../components/Themed';
-import { RootTabScreenProps } from '../types';
-import {useEffect, useState} from "react";
+import {Animated, FlatList, StatusBar, StyleSheet} from 'react-native';
+import {Text, View} from '../components/Themed';
+import {useEffect, useRef, useState} from "react";
 import {ClientApi} from "../api/client";
 
-interface IClient{
+interface IClient {
+    id: string;
+    name: string;
+    surname: string;
+    appointment_time: string;
+    origin_name: string;
+    destination_name: string;
+    destination_street: string;
+    destination_suite: string;
+    origin_street: string;
+    origin_suite: string;
 
 }
-export default function Clients({ navigation }: RootTabScreenProps<'Clients'>) {
-  const [data, setData] = useState<Array<IClient>>([])
+const ITEM_SIZE = 160
+export default function Clients() {
+    const [dataClient, setData] = useState<Array<IClient>>([])
+    const scrollY = useRef(new Animated.Value(0)).current
+    useEffect(() => {
+        (async () => {
+            const clientData = await ClientApi.getClientsData()
+            console.log(clientData, 'clientData')
+            setData(clientData.clients)
+        })()
+    }, [])
+    const AnimatedHeaderValue =new Animated.Value(0)
+    const animateHeaderHeight = scrollY.interpolate({
+        inputRange:[0,136-50],
+        outputRange:[136,50],
+        extrapolate:'clamp'
+    })
+    const animateHeaderHeight2 = scrollY.interpolate({
+        inputRange:[0,136-50],
+        outputRange:['blue','red'],
+        extrapolate:'clamp'
+    })
+    return (
+        <View style={styles.container}>
+            <Animated.View style={[styles.header,{
+                height:animateHeaderHeight,
+                backgroundColor:animateHeaderHeight2
+            }]}>
+                <Text>jhkhk</Text>
+            </Animated.View>
+            <Animated.FlatList
+                data={dataClient}
+                onScroll={Animated.event([{
+                        nativeEvent: {contentOffset: {y: scrollY}}
+                    }],
+                    {useNativeDriver: false}
+                )}
+                keyExtractor={item => item.id}
+               //  contentContainerStyle={{padding:10}}
+                renderItem={({item, index}) => {
+                    const inputRange =[
+                        -1,
+                        0,
+                        ITEM_SIZE * index,
+                        ITEM_SIZE * (index+2),
+                    ]
+                    const opacityRange =[
+                        -1,
+                        0,
+                        ITEM_SIZE * index,
+                        ITEM_SIZE * (index+1),
+                    ]
+                    const scale = scrollY.interpolate({
+                        inputRange,
+                        outputRange:[1,1,1,0]
+                    })
+                    const opacity = scrollY.interpolate({
+                        inputRange:opacityRange,
+                        outputRange:[1,1,1,0]
+                    })
+                    return <Animated.View style={{
+                        // height:30,
+                        borderRadius: 15,
+                        backgroundColor:"white",
+                        shadowColor: "#000",
+                        shadowOffset: {
+                            width: 0,
+                            height: 10
+                        },
+                        transform:[{scale}],
+                        padding: 20,
+                        margin: 10,
+                        opacity,
+                        shadowOpacity: .3,
+                        shadowRadius: 20
+                    }}>
+                        <Text style={styles.listText}>{item.name + ' ' + item.surname}</Text>
+                        <Text style={styles.listText}>{item.appointment_time}</Text>
+                        <Text style={styles.listText}>{item.origin_name}</Text>
+                        <Text style={styles.listText}>{item.origin_street}</Text>
+                        <Text style={styles.listText}>{item.origin_suite}</Text>
 
-  useEffect( () => {
-    (async () => {
-       const clientData = await ClientApi.getClientsData()
-      // setData(clientData)
-    })()
-  },[])
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Clients</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="/screens/Clients.tsx" />
-    </View>
-  );
+
+                        {/*<Text style={styles.listText}>{item.id}</Text>*/}
+
+                    </Animated.View>
+                }}
+            />
+
+        </View>
+    );
 }
+
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
+    container: {
+        flex:1,
+       /// flexDirection: 'row',
+        backgroundColor:"#4466b0"
+    },
+    title: {
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
+
+    list: {
+    },
+    header:{},
+    listText: {
+      height:20
+    }
 });
