@@ -44,7 +44,7 @@ export default function Clients() {
                 height:animateHeaderHeight,
                 backgroundColor:animateHeaderHeight2
             }]}>
-                <Text>jhkhk</Text>
+                <Text style={styles.headerText}>jhkhk</Text>
             </Animated.View>
             <Animated.FlatList
                 data={dataClient}
@@ -122,6 +122,12 @@ const styles = StyleSheet.create({
     },
 
     list: {
+    },
+    headerText:{
+        marginTop:20,
+        textAlign:"center",
+        justifyContent:"center"
+
     },
     header:{},
     listText: {
