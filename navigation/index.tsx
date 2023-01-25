@@ -39,7 +39,7 @@ export default function Navigation({colorScheme}: { colorScheme: ColorSchemeName
  */
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-function RootNavigator() {
+function RootNavigator({navigation}: any) {
     const [user, setUser] = useState(null);
     useEffect(() => {
         checkUser()
@@ -63,7 +63,7 @@ function RootNavigator() {
             <Stack.Screen name="Home" component={BottomTabNavigator} options={{headerShown: false}}/>
             <Stack.Screen name="NotFound" component={NotFoundScreen} options={{title: 'Oops!'}}/>
             <Stack.Group screenOptions={{presentation: 'modal'}}>
-                <Stack.Screen name="Modal" component={ModalScreen}/>
+                <Stack.Screen name="Modal"  component={ModalScreen}  options={{headerShown: false}}/>
             </Stack.Group>
 
         </Stack.Navigator>
