@@ -28,11 +28,15 @@ const IClientData = {
     destination_comment: "",
     member_uniqie_identifer: "",
     los: "",
+    weight: '',
+    height: '',
     gender: {label: ""},
+    request_type: {label: ""},
 
 
 }
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon2 from 'react-native-vector-icons/FontAwesome5';
 
 const iconColor = '#4466b0';
 export default function ModalScreen({navigation, route}: any) {
@@ -41,7 +45,7 @@ export default function ModalScreen({navigation, route}: any) {
     useEffect(() => {
         (async () => {
             const clientData = await ClientApi.getClientData(clientId)
-            console.log(clientData, clientId, 'clientData')
+          ////  console.log(clientData, clientId, 'clientData')
             setData(clientData.client)
         })()
     }, [])
@@ -61,14 +65,38 @@ export default function ModalScreen({navigation, route}: any) {
                 </View>
             </View>
             <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
-            <View>
+            <View style={styles.iconsSection}>
 
-                <Text>{data.gender.label === 'M' ? <Icon name="male" style={styles.iconItem} size={25} color={iconColor}/> :
-                    <Icon name="female" style={styles.iconItem} size={25} color={iconColor}/>}</Text>
+                <View style={styles.iconView}>{data.gender.label === 'M' ?
+                    <Icon name="male" style={styles.iconItem} size={20} color={iconColor}/> :
+                    <Icon name="female" style={styles.iconItem} size={20} color={iconColor}/>}
+                </View>
+                <View style={styles.iconItem}>
+                    <Icon2 name="arrows-alt-v" size={20} color={iconColor}/>
+                    <Text>
+                        {data.height ? data.height : 0}
+                    </Text>
+                </View>
+                <View style={styles.iconItem}>
+                    <Icon2   name="weight"  size={20} color={iconColor}/>
+                    <Text >
+                        {data.weight ? data.weight : 0}
+                    </Text>
+                </View>
+
+                <Text style={styles.iconView}>
+                    {data.request_type.label}
+                </Text>
             </View>
             <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
 
             <View style={styles.bodyModal}>
+                <View style={styles.listItem}>
+                    <Text style={styles.textItem}>
+                        {data.member_uniqie_identifer}
+                    </Text>
+                </View>
+                <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
 
                 <View style={styles.listItem}>
                     <Icon name="clock-o" style={styles.iconItem} size={25} color={iconColor}/>
@@ -76,19 +104,24 @@ export default function ModalScreen({navigation, route}: any) {
                         {data.pick_up}
                     </Text>
                 </View>
+                <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
+
                 <View style={styles.listItem}>
                     <Icon name="ambulance" style={styles.iconItem} size={25} color={iconColor}/>
                     <Text style={styles.textItem}>
                         {data.origin_city + ' ' + data.origin_name + ' ' + data.origin_postal + "\n" + data.origin_street + ' ' + data.origin_suite}
                     </Text>
-                    <Icon name="phone" style={styles.iconItem2} size={25} color={iconColor}/>
+                    <Icon name="phone" style={styles.iconPhone} size={25} color={iconColor}/>
                 </View>
+                <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
+
                 <View style={styles.listItem}>
                     <Icon name="comment-o" style={styles.iconItem} size={25} color={iconColor}/>
                     <Text style={styles.textItem}>
                         {data.origin_comment}
                     </Text>
                 </View>
+                <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
 
                 <View style={styles.listItem}>
                     <Icon name="clock-o" style={styles.iconItem} size={25} color={iconColor}/>
@@ -96,20 +129,25 @@ export default function ModalScreen({navigation, route}: any) {
                         {data.appointment_time}
                     </Text>
                 </View>
+                <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
+
                 <View style={styles.listItem}>
                     <Icon name="hospital-o" style={styles.iconItem} size={25} color={iconColor}/>
                     <Text style={styles.textItem}>
                         {data.destination_city + ' ' + data.destination_name + '' + data.destination_postal + "\n" + data.destination_street + " " + data.destination_suite}
                     </Text>
-                    <Icon name="phone" style={styles.iconItem2} size={25} color={iconColor}/>
+                    <Icon name="phone" style={styles.iconPhone} size={25} color={iconColor}/>
 
                 </View>
+                <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
+
                 <View style={styles.listItem}>
                     <Icon name="comment-o" style={styles.iconItem} size={25} color={iconColor}/>
                     <Text style={styles.textItem}>
                         {data.destination_comment}
                     </Text>
                 </View>
+                <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
 
                 <View style={styles.listItem}>
                     <Icon name="wheelchair" style={styles.iconItem} size={25} color={iconColor}/>
@@ -117,32 +155,39 @@ export default function ModalScreen({navigation, route}: any) {
                         {data.los}
                     </Text>
                 </View>
-                <View style={styles.listItem}>
-                    <Icon name="globe" style={styles.iconItem} size={25} color={iconColor}/>
-                    <Text style={styles.textItem}>
-                        {data.member_uniqie_identifer}
-                    </Text>
-                </View>
-                <View style={styles.listItem}>
-                    <Icon name="close" style={styles.iconItem} size={30} color={iconColor}/>
-                </View>
-                <View style={styles.listItem}>
-                    <Icon name="ambulance" style={styles.iconItem} size={30} color={iconColor}/>
-                </View>
-                <View style={styles.listItem}>
-                    <Icon name="hospital-o" style={styles.iconItem} size={30} color={iconColor}/>
-                </View>
-                <View style={styles.listItem}>
-                    <Icon name="comment-o" style={styles.iconItem} size={30} color={iconColor}/>
-                </View>
-                <View style={styles.listItem}>
-                    <Icon name="comments-o" style={styles.iconItem} size={30} color={iconColor}/>
-                </View>
+                <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
 
-                <View style={styles.listItem}>
-                    <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
+                {/*<View style={styles.listItem}>*/}
+                {/*    <Icon name="close" style={styles.iconItem} size={30} color={iconColor}/>*/}
+                {/*</View>*/}
+                {/*<View style={styles.listItem}>*/}
+                {/*    <Icon name="ambulance" style={styles.iconItem} size={30} color={iconColor}/>*/}
+                {/*</View>*/}
+                {/*<View style={styles.listItem}>*/}
+                {/*    <Icon name="hospital-o" style={styles.iconItem} size={30} color={iconColor}/>*/}
+                {/*</View>*/}
+                {/*<View style={styles.listItem}>*/}
+                {/*    <Icon name="comment-o" style={styles.iconItem} size={30} color={iconColor}/>*/}
+                {/*</View>*/}
+                {/*<View style={styles.listItem}>*/}
+                {/*    <Icon name="comments-o" style={styles.iconItem} size={30} color={iconColor}/>*/}
+                {/*</View>*/}
+
+                {/*<View style={styles.listItem}>*/}
+                {/*    <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>*/}
+                {/*</View>*/}
+                {/*<EditScreenInfo path="/screens/ModalScreen.tsx"/>*/}
+                <View style={styles.buttonIcons}>
+                    <TouchableOpacity style={styles.closeButton}
+                                      onPress={() => {
+                                          navigation.goBack();
+                                          navigation.navigate('DriverRoute',{
+                                              id:clientId
+                                          })
+                                      }}>
+                    <Icon2 name={'route'} size={35} color={iconColor} />
+                    </TouchableOpacity>
                 </View>
-                <EditScreenInfo path="/screens/ModalScreen.tsx"/>
             </View>
             {/* Use a light status bar on iOS to account for the black space above the modal */}
             <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'}/>
@@ -153,8 +198,6 @@ export default function ModalScreen({navigation, route}: any) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
     },
     header: {
         flex: 1,
@@ -162,33 +205,36 @@ const styles = StyleSheet.create({
     },
     title: {
         flexDirection: "row",
-        // display:"flex",
         fontSize: 20,
-        /// width: "100%",
         fontWeight: 'bold',
     },
     titleSmallSection: {
         flexDirection: "row",
         fontSize: 10,
         marginHorizontal: 20,
-        ///flexDirection: "column",
     },
     separator: {
-        /// marginVertical: 30,
         borderColor: "black",
         borderWidth: 1,
         height: 1,
         flexDirection: "column",
-        marginVertical: 1,
+        marginVertical: 10,
         width: '100%',
+    },
+    separatorList: {
+     ///   borderColor: "black",
+        ///borderWidth: 1,
+        height: 1,
+        flexDirection: "column",
+        marginVertical: 6,
+        width: '100%',
+
     },
     titleSection: {
         flexGrow: 5,
         marginHorizontal: 20,
         fontSize: 20,
         fontWeight: "bold"
-        ///alignSelf:"flex-start"
-        // textAlign:"left"
     },
     closeButtonSection: {
         marginHorizontal: 20,
@@ -198,8 +244,6 @@ const styles = StyleSheet.create({
         flexGrow: 0.5,
         fontSize: 20,
         fontWeight: 'bolder',
-        ///alignSelf:"flex-end",
-        // textAlign:"right"
     },
     bodyModal: {
         paddingHorizontal: 20,
@@ -211,24 +255,41 @@ const styles = StyleSheet.create({
         // width: 100,\
         //flex: 1,
         flexDirection: 'row',
-        minHeight: 60
+       // minHeight: 60
     },
     textItem: {
-        justifyContent: 'flex-start',
-        ///textAlign:'center',
-        ///    textAlign:'start',
-        //  marginRight: 10,
+        alignSelf: 'flex-start',
         fontSize: 15,
         flex: 10,
-        //  fontFamily: 'TAHOMA'
     },
     iconItem: {
         flex: 1,
+        flexDirection:"row"
     },
-    iconItem2: {
+    iconPhone: {
         alignItems: 'flex-end',
         flex: 1,
 
+    },
+    iconsSection: {
+        ///flex: 1,
+        alignSelf: 'flex-start',
+        //flexWrap: 'wrap',
+        flexDirection: "row",
+        paddingHorizontal: 20
+    },
+    iconView: {
+        alignSelf: 'flex-start',
+        fontSize: 15,
+        flex: 1,
+        /// justifyContent: "flex-start",
+        marginHorizontal: 5,
+        ///flexWrap: 'wrap',
+
+    },
+    buttonIcons:{
+        flexDirection:'row',
+        alignSelf: 'center',
     }
 
 });

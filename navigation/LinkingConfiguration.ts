@@ -27,7 +27,9 @@ const linking: LinkingOptions<RootStackParamList> = {
         },
       },
       Modal: 'modal',
+      RouteScreen: 'DriverRoute',
       NotFound: '*',
+
     },
   },
 };

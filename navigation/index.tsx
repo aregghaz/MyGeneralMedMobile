@@ -22,6 +22,7 @@ import SettingsComponent from "../assets/images/Settings";
 import Login from "../screens/LoginScreen";
 import {useEffect, useState} from "react";
 import {AuthApi} from "../api/auth";
+import RouterScreen from "../screens/RouteScreen";
 
 export default function Navigation({colorScheme}: { colorScheme: ColorSchemeName }) {
     return (
@@ -62,6 +63,7 @@ function RootNavigator({navigation}: any) {
             <Stack.Screen name="Login" component={Login} options={{headerShown: false}}/>
             <Stack.Screen name="Home" component={BottomTabNavigator} options={{headerShown: false}}/>
             <Stack.Screen name="NotFound" component={NotFoundScreen} options={{title: 'Oops!'}}/>
+            <Stack.Screen name="DriverRoute" component={RouterScreen} options={{ headerShown: false }}/>
             <Stack.Group screenOptions={{presentation: 'modal'}}>
                 <Stack.Screen name="Modal"  component={ModalScreen}  options={{headerShown: false}}/>
             </Stack.Group>

@@ -7,4 +7,7 @@ export const ClientApi = {
     getClientData(id:number) {
         return axios.get(`${fakeUrl}/api/client-data-driver/${id}`).then(res => res.data)
     },
+    getClientRoute(id:number) {
+        return axios.get(`${fakeUrl}/api/client-route-driver/${id}`).then(res => res.data)
+    },
 }

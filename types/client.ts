@@ -17,9 +17,14 @@ export interface IClient {
     trip_id: string;
     origin_comment: string;
     destination_comment: string;
-    member_uniqie_identifer: string;
+    member_uniqie_identifer: string
     los: string;
+    height: string;
+    weight: string;
     gender: {
+        label:string
+    }
+    request_type: {
         label:string
     };
 
