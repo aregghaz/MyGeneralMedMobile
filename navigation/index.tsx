@@ -95,7 +95,7 @@ function BottomTabNavigator() {
             <BottomTab.Screen
                 name="Clients"
                 component={Clients}
-                options={{headerShown:false}}
+                options={{headerShown:false, tabBarIcon: ({color}) => <TabClientIcon name="code" color={color}/>,}}
             />
             <BottomTab.Screen
                 name="TabTwo"
@@ -108,6 +108,7 @@ function BottomTabNavigator() {
         </BottomTab.Navigator>
     );
 }
+
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/

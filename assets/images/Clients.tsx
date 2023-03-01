@@ -5,11 +5,13 @@ const ClientComponent = (props: SvgProps) => (
     <Svg
        /// xmlns="http://www.w3.org/2000/svg"
         width={24} height={24}
+        fill={'#D63D3D'}
         {...props}
     >
         <Path
-            stroke="currentColor"
+          //  stroke="currentColor"
             strokeWidth={1}
+            fill={'#D63D3D'}
             //strokeLinecap="round"
            // strokeLinejoin="round"
             // style={{

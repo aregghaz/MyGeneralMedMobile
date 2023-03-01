@@ -190,7 +190,7 @@ export default function Clients({navigation}: any) {
                     }],
                     {useNativeDriver: false}
                 )}
-                keyExtractor={item => item.id}
+                keyExtractor={(item) => item.id.toString()}
                 contentContainerStyle={{marginVertical: 86}}
                 renderItem={({item, index}) => {
                     return <TouchableOpacity style={{
@@ -213,12 +213,10 @@ export default function Clients({navigation}: any) {
                         navigation.navigate('Modal',{'clientId': item.id})
                     }}
                     >
-                        <Text style={styles.listText}>{item.name + ' ' + item.surname}</Text>
-                        <Text style={styles.listText}>{item.appointment_time}</Text>
-                        <Text style={styles.listText}>{item.origin_name}</Text>
-                        <Text style={styles.listText}>{item.origin_street}</Text>
-                        <Text style={styles.listText}>{item.origin_suite}</Text>
-                        {/*<Text style={styles.listText}>{item.id}</Text>*/}
+                        <Text style={styles.listText}>{item.fullName}</Text>
+                        <Text style={styles.listText}>{item.pick_up}</Text>
+                        <Text style={styles.listText}>{item.origin}</Text>
+                        <Text style={styles.listText}>{item.destination}</Text>
                     </TouchableOpacity>
                 }}/>
 
@@ -231,7 +229,7 @@ export default function Clients({navigation}: any) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#4466b0"
+        backgroundColor: "#D63D3D"
     },
     icon16: {
         width: 16,
@@ -248,7 +246,7 @@ const styles = StyleSheet.create({
     header: {
         position: 'absolute',
         width: '100%',
-        backgroundColor: "#4466b0",
+        backgroundColor: "#D63D3D",
     },
     upperHeader: {
         flexDirection: 'row',

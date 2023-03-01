@@ -22,9 +22,9 @@ const Button: React.FC<IButton> = ({onPress, text, type ='PRIMARY'}) => {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: "#4466b0",
+        backgroundColor: "#D63D3D",
         width: "100%",
-        borderColor: "#4466b0",
+        borderColor: "#D63D3D",
         borderWidth: 1,
         borderRadius: 5,
         padding: 15,
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
 
     },
     container_PRIMARY: {
-        backgroundColor:  "#4466b0",
+        backgroundColor:  "#D63D3D",
     },
     container_SECONDARY: {
         backgroundColor: 'white'

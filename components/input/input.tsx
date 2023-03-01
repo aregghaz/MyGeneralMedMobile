@@ -25,7 +25,7 @@ const Input: React.FC<IInput> = ({
         rules={rules}
         render={({field: {value, onChange, onBlur}, fieldState: {error}}) => (
            <>
-               <View style={[styles.container, {borderColor: error? 'red': "#4466b0"}]}>
+               <View style={[styles.container, {borderColor: error? 'red': "#D63D3D"}]}>
                    <TextInput
                        placeholder={placeholder}
                        style={styles.input}
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: "white",
         width: "100%",
-        borderColor: "#4466b0",
+        borderColor: "#D63D3D",
         borderWidth: 1,
         borderRadius: 5,
         padding: 10,

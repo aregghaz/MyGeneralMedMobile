@@ -13,8 +13,11 @@ import MapViewDirections from "react-native-maps-directions";
 import Geocoder from 'react-native-geocoding';
 import Icon2 from "react-native-vector-icons/FontAwesome5";
 import {ClientApi} from "../api/client";
+import { RootStackParamList } from "../types";
+import Icon from 'react-native-vector-icons/FontAwesome';
+const iconColor = '#D63D3D';
+export default function RouteScreen({navigation, route}: any) {
 
-export default function RouteScreen({navigation,route}:any) {
     const {id} = route.params
     const [origin, setOrigin] = useState<LatLng | null>();
     const [destination, setDestination] = useState<LatLng | null>();
@@ -39,7 +42,7 @@ export default function RouteScreen({navigation,route}:any) {
             const clientData = await ClientApi.getClientRoute(id)
             console.log(clientData,  '333333ååå')
            /// setData(clientData.client)
-            await traceRoute(clientData.route)
+            await traceRoute(clientData)
         })()
     }, [])
     const traceRouteOnReady = (args: any) => {
@@ -49,8 +52,9 @@ export default function RouteScreen({navigation,route}:any) {
         }
     };
 
-    const traceRoute = async (route:{origin:string, destination:string}) => {
+    const traceRoute = async (route:{origin:string, origin_id:string,destination_id:string, destination:string}) => {
         Geocoder.init(GOOGLE_API_KEY);
+
         const dataTo = await Geocoder.from(route.origin)
         var locationFrom = dataTo.results[0].geometry.location;
         setDestination({
@@ -63,6 +67,7 @@ export default function RouteScreen({navigation,route}:any) {
             latitude: locationTO.lat,
             longitude: locationTO.lng
         })
+
         setShowDirections(true);
         mapRef.current?.fitToCoordinates([{
             latitude: locationFrom.lat,
@@ -71,7 +76,6 @@ export default function RouteScreen({navigation,route}:any) {
             latitude: locationTO.lat,
             longitude: locationTO.lng
         }], {edgePadding});
-        //}
     };
 
 
@@ -98,14 +102,14 @@ export default function RouteScreen({navigation,route}:any) {
             </MapView>
             <View style={styles.searchContainer}>
                 <TouchableOpacity
+                    style={styles.backButton}
                     onPress={() => {
                         navigation.goBack();
-
                     }}>
-                    <Text>Back</Text>
+                    <Icon name="arrow-left" size={30} color={iconColor}/>
                 </TouchableOpacity>
                 {distance && duration ? (
-                    <View>
+                    <View style={styles.info}>
                   {/*      <TouchableOpacity
                                           onPress={() => {
                                               navigation.goBack();
@@ -113,7 +117,7 @@ export default function RouteScreen({navigation,route}:any) {
                                           }}>
                            <Text>Back</Text>
                         </TouchableOpacity>*/}
-                        <Text>Distance: {distance.toFixed(2)}</Text>
+                        <Text>Distance: {distance.toFixed(2)} mile</Text>
                         <Text>Duration: {Math.ceil(duration)} min</Text>
                     </View>
                 ) : null}
@@ -136,6 +140,8 @@ const styles = StyleSheet.create({
     searchContainer: {
         position: "absolute",
         width: "90%",
+        display:"flex",
+        flexDirection:"row",
         backgroundColor: "white",
         shadowColor: "black",
         shadowOffset: { width: 2, height: 2 },
@@ -155,6 +161,22 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
         marginTop: 16,
         borderRadius: 4,
+    },
+    backButton: {
+        //width: 50,
+        margin: 5,
+        paddingHorizontal:15,
+        display:"flex",
+        borderRightWidth:1,
+        borderRightColor:iconColor,
+        flexDirection:"column",
+        textAlignVertical: "center",
+
+    },
+    info:{
+        margin: 5,
+        display:"flex",
+        flexDirection:"column"
     },
     buttonText: {
         textAlign: "center",

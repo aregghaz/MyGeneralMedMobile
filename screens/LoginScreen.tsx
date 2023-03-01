@@ -61,7 +61,7 @@ const Login = () => {
 const styles = StyleSheet.create({
     root: {
         alignItems: "center",
-        padding: 20
+        padding: 40
     },
     logo: {
         width: "70%",
