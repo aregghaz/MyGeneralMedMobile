@@ -161,7 +161,7 @@ export default function Clients({navigation}: any) {
                             style={[styles.icon32, featureIconCircleAnimation]}
                         />
                         <Animated.Text style={[styles.featureName, featureNameAnimation]}>
-                            Show details
+                           Notification
                         </Animated.Text>
                     </Animated.View>
 

@@ -1,12 +1,13 @@
 import {StatusBar} from 'expo-status-bar';
-import {Platform, StyleSheet, TouchableOpacity} from 'react-native';
-
-import EditScreenInfo from '../components/EditScreenInfo';
+import {Linking, Platform, StyleSheet, TouchableOpacity} from 'react-native';
 import {Text, View} from '../components/Themed';
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import {ClientApi} from "../api/client";
-import {IClient} from "../types/client";
-import {Linking} from 'react-native'
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon2 from 'react-native-vector-icons/FontAwesome5';
+import {useDispatch, useSelector} from "react-redux";
+import {clientAction} from "../store/client";
+import {getClientData} from "../store/selectors";
 
 const IClientData = {
     id: 0,
@@ -40,28 +41,30 @@ const IClientData = {
     additionalNote: '',
     operator_note: ''
 }
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Icon2 from 'react-native-vector-icons/FontAwesome5';
 
 const iconColor = '#D63D3D';
 export default function ModalScreen({navigation, route}: any) {
     const {clientId} = route.params
-    const [data, setData] = useState<IClient>(IClientData)
+    const dispatch = useDispatch();
+    const client = useSelector(getClientData);
+    const {clientById} = client;
+
+///    const [clientById.client, setData] = useState<IClient>(IClientData)
+
     useEffect(() => {
         (async () => {
             const clientData = await ClientApi.getClientData(clientId)
             console.log(clientId)
-            setData(clientData.client)
+            dispatch(clientAction.fetching({clientById: clientData}))
         })()
     }, [clientId])
 
-
-    return data && (
+   return clientById.client && (
         <View style={styles.container}>
             <View style={styles.title}>
                 <View style={styles.header}>
-                    <Text style={styles.titleSection}>{data.fullName}</Text>
-                    <Text style={styles.titleSmallSection}>{data.trip_id}</Text>
+                    <Text style={styles.titleSection}>{clientById.client.fullName}</Text>
+                    <Text style={styles.titleSmallSection}>{clientById.client.trip_id}</Text>
                 </View>
                 <View style={styles.closeButtonSection}>
                     <TouchableOpacity style={styles.closeButton}
@@ -75,25 +78,25 @@ export default function ModalScreen({navigation, route}: any) {
             <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
             <View style={styles.iconsSection}>
 
-                <View style={styles.iconView}>{data.gender === 'M' ?
+                <View style={styles.iconView}>{clientById.client.gender === 'M' ?
                     <Icon name="male" style={styles.iconItem} size={20} color={iconColor}/> :
                     <Icon name="female" style={styles.iconItem} size={20} color={iconColor}/>}
                 </View>
                 <View style={styles.iconItem}>
                     <Icon2 name="arrows-alt-v" size={20} color={iconColor}/>
                     <Text>
-                        {data.height ? data.height : 0}
+                        {clientById.client.height ? clientById.client.height : 0}
                     </Text>
                 </View>
                 <View style={styles.iconItem}>
                     <Icon2 name="weight" size={20} color={iconColor}/>
                     <Text>
-                        {data.weight ? data.weight : 0}
+                        {clientById.client.weight ? clientById.client.weight : 0}
                     </Text>
                 </View>
 
                 <Text style={styles.iconView}>
-                    {data.request_type}
+                    {clientById.client.request_type}
                 </Text>
             </View>
             <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
@@ -102,7 +105,7 @@ export default function ModalScreen({navigation, route}: any) {
                 <View style={styles.listItem}>
                     <Icon name="address-card-o" style={styles.iconItem} size={25} color={iconColor}/>
                     <Text style={styles.textItem}>
-                        {data.member_uniqie_identifer}
+                        {clientById.client.member_uniqie_identifer}
                     </Text>
                 </View>
                 <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
@@ -110,7 +113,7 @@ export default function ModalScreen({navigation, route}: any) {
                 <View style={styles.listItem}>
                     <Icon name="clock-o" style={styles.iconItem} size={25} color={iconColor}/>
                     <Text style={styles.textItem}>
-                        {data.pick_up}
+                        {clientById.client.pick_up}
                     </Text>
                 </View>
                 <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
@@ -118,16 +121,18 @@ export default function ModalScreen({navigation, route}: any) {
                 <View style={styles.listItem}>
                     <Icon name="address-book-o" style={styles.iconItem} size={25} color={iconColor}/>
                     <Text style={styles.textItem}>
-                        {data.origin}
+                        {clientById.client.origin}
                     </Text>
-                    <Icon name="phone" style={styles.iconPhone} size={25} color={iconColor} onPress={()=>{Linking.openURL('tel:119');}} />
+                    <Icon name="phone" style={styles.iconPhone} size={25} color={iconColor} onPress={() => {
+                        Linking.openURL('tel:119');
+                    }}/>
                 </View>
                 <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
 
                 <View style={styles.listItem}>
                     <Icon name="comment-o" style={styles.iconItem} size={25} color={iconColor}/>
                     <Text style={styles.textItem}>
-                        {data.origin_comment}
+                        {clientById.client.origin_comment}
                     </Text>
                 </View>
                 <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
@@ -135,7 +140,7 @@ export default function ModalScreen({navigation, route}: any) {
                 <View style={styles.listItem}>
                     <Icon name="clock-o" style={styles.iconItem} size={25} color={iconColor}/>
                     <Text style={styles.textItem}>
-                        {data.pick_up}
+                        {clientById.client.pick_up}
                     </Text>
                 </View>
                 <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
@@ -143,7 +148,7 @@ export default function ModalScreen({navigation, route}: any) {
                 <View style={styles.listItem}>
                     <Icon name="hospital-o" style={styles.iconItem} size={25} color={iconColor}/>
                     <Text style={styles.textItem}>
-                        {data.destination}
+                        {clientById.client.destination}
                     </Text>
                     <Icon name="phone" style={styles.iconPhone} size={25} color={iconColor}/>
 
@@ -153,7 +158,7 @@ export default function ModalScreen({navigation, route}: any) {
                 <View style={styles.listItem}>
                     <Icon name="comment-o" style={styles.iconItem} size={25} color={iconColor}/>
                     <Text style={styles.textItem}>
-                        {data.destination_comment}
+                        {clientById.client.destination_comment}
                     </Text>
                 </View>
                 <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
@@ -161,7 +166,7 @@ export default function ModalScreen({navigation, route}: any) {
                 <View style={styles.listItem}>
                     <Icon name="wheelchair" style={styles.iconItem} size={25} color={iconColor}/>
                     <Text style={styles.textItem}>
-                        {data.los}
+                        {clientById.client.los}
                     </Text>
                 </View>
                 <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
@@ -279,7 +284,7 @@ const styles = StyleSheet.create({
         marginVertical: 20,
     },
     closeButton: {
-       flexGrow:0,
+        flexGrow: 0,
         marginHorizontal: 25,
         fontSize: 20,
         fontWeight: 'bolder',
@@ -303,7 +308,7 @@ const styles = StyleSheet.create({
     },
     iconItem: {
         flex: 1,
-       /// justifyContent:'flex-start',
+        /// justifyContent:'flex-start',
         flexDirection: "row"
     },
     iconPhone: {
@@ -328,9 +333,9 @@ const styles = StyleSheet.create({
 
     },
     buttonIcons: {
-        padding:25,
+        padding: 25,
         flexDirection: 'row',
-       // flex:1,
+        // flex:1,
         alignSelf: 'center',
 
     }
