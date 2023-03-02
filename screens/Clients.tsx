@@ -20,16 +20,16 @@ const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 
 
 
-const UPPER_HEADER_HEIGHT = 32;
+const UPPER_HEADER_HEIGHT = 35;
 const UPPER_HEADER_PADDING_TOP = 4;
-const LOWER_HEADER_HEIGHT = 96;
+const LOWER_HEADER_HEIGHT = 85;
 
 export default function Clients({navigation}: any) {
     const animatedValue = useRef(new Animated.Value(0)).current;
-    const depositViewAnimation = getFeatureViewAnimation(animatedValue, 36);
-    const withdrawViewAnimation = getFeatureViewAnimation(animatedValue, -16);
-    const qrViewAnimation = getFeatureViewAnimation(animatedValue, -56);
-    const scanViewAnimation = getFeatureViewAnimation(animatedValue, -92);
+    const depositViewAnimation = getFeatureViewAnimation(animatedValue, 40);
+    const withdrawViewAnimation = getFeatureViewAnimation(animatedValue, 20);
+    const qrViewAnimation = getFeatureViewAnimation(animatedValue, 0);
+    const scanViewAnimation = getFeatureViewAnimation(animatedValue, -40);
     const [dataClient, setData] = useState<Array<IClient>>([])
     useEffect(() => {
         (async () => {
@@ -115,10 +115,7 @@ export default function Clients({navigation}: any) {
                         />
                     </View>
 
-                    <Image
-                        source={require('../assets/images/bell.png')}
-                        style={styles.bell}
-                    />
+
                     <Image
                         source={require('../assets/images/avatar.png')}
                         style={styles.avatar}
@@ -128,25 +125,11 @@ export default function Clients({navigation}: any) {
                 <View style={[styles.lowerHeader]}>
                     <Animated.View style={[styles.feature, depositViewAnimation]}>
                         <Animated.Image
-                            source={require('../assets/images/deposit.png')}
+                            source={require('../assets/images/map.png')}
                             style={[styles.featureIcon, featureIconAnimation]}
                         />
                         <Animated.Image
-                            source={require('../assets/images/deposit-circle.png')}
-                            style={[styles.icon32, featureIconCircleAnimation]}
-                        />
-                        <Animated.Text style={[styles.featureName, featureNameAnimation]}>
-                            Start
-                        </Animated.Text>
-                    </Animated.View>
-
-                    <Animated.View style={[styles.feature, withdrawViewAnimation]}>
-                        <Animated.Image
-                            source={require('../assets/images/withdraw.png')}
-                            style={[styles.featureIcon, featureIconAnimation]}
-                        />
-                        <Animated.Image
-                            source={require('../assets/images/withdraw-circle.png')}
+                            source={require('../assets/images/map.png')}
                             style={[styles.icon32, featureIconCircleAnimation]}
                         />
                         <Animated.Text style={[styles.featureName, featureNameAnimation]}>
@@ -154,13 +137,27 @@ export default function Clients({navigation}: any) {
                         </Animated.Text>
                     </Animated.View>
 
-                    <Animated.View style={[styles.feature, qrViewAnimation]}>
+                    <Animated.View style={[styles.feature, withdrawViewAnimation]}>
                         <Animated.Image
-                            source={require('../assets/images/qr.png')}
+                            source={require('../assets/images/info.jpeg')}
                             style={[styles.featureIcon, featureIconAnimation]}
                         />
                         <Animated.Image
-                            source={require('../assets/images/qr-circle.png')}
+                            source={require('../assets/images/info.jpeg')}
+                            style={[styles.icon32, featureIconCircleAnimation]}
+                        />
+                        <Animated.Text style={[styles.featureName, featureNameAnimation]}>
+                            Info
+                        </Animated.Text>
+                    </Animated.View>
+
+                    <Animated.View style={[styles.feature, qrViewAnimation]}>
+                        <Animated.Image
+                            source={require('../assets/images/bell.png')}
+                            style={[styles.featureIcon, featureIconAnimation]}
+                        />
+                        <Animated.Image
+                            source={require('../assets/images/bell.png')}
                             style={[styles.icon32, featureIconCircleAnimation]}
                         />
                         <Animated.Text style={[styles.featureName, featureNameAnimation]}>
@@ -170,15 +167,15 @@ export default function Clients({navigation}: any) {
 
                     <Animated.View style={[styles.feature, scanViewAnimation]}>
                         <Animated.Image
-                            source={require('../assets/images/deposit.png')}
+                            source={require('../assets/images/profit.png')}
                             style={[styles.featureIcon, featureIconAnimation]}
                         />
                         <Animated.Image
-                            source={require('../assets/images/deposit-circle.png')}
+                            source={require('../assets/images/profit.png')}
                             style={[styles.icon32, featureIconCircleAnimation]}
                         />
                         <Animated.Text style={[styles.featureName, featureNameAnimation]}>
-                            Done
+                            Profit
                         </Animated.Text>
                     </Animated.View>
                 </View>
@@ -260,15 +257,15 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     featureIcon: {
-        width: 16,
-        height: 16,
+        width: 20,
+        height: 25,
         position: 'absolute',
         top: 8,
     },
     bell: {
         width: 16,
         height: 16,
-        marginHorizontal: 32,
+       // marginHorizontal: 32,
     },
     avatar: {
         width: 28,
@@ -284,7 +281,7 @@ const styles = StyleSheet.create({
     },
     searchInput: {
         position: 'absolute',
-        width: '100%',
+        width: '98%',
         backgroundColor: 'rgba(255, 255, 255, 0.3)',
         color: 'white',
         borderRadius: 4,

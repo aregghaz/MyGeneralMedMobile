@@ -3877,7 +3877,7 @@ expo-keep-awake@~11.0.1:
 
 expo-linking@~3.3.1:
   version "3.3.1"
-  resolved "https://registry.yarnpkg.com/expo-linking/-/expo-linking-3.3.1.tgz#253b183321e54cb6fa1a667a53d4594aa88a3357"
+  resolved "https://registry.npmjs.org/expo-linking/-/expo-linking-3.3.1.tgz"
   integrity sha512-T3VIZMyZhkBOpHIyfT514rweGZZMbdg1vwavsfAkm6BFJ8G0iNVGbYMTpoUiQ9xdA0ARCcZbXFFb+WhqEUITgQ==
   dependencies:
     "@types/qs" "^6.5.3"
@@ -7149,9 +7149,9 @@ react-native-vector-icons@^9.2.0:
     prop-types "^15.7.2"
     yargs "^16.1.1"
 
-react-native-web@~0.18.9:
+react-native-web@^0.18.12:
   version "0.18.12"
-  resolved "https://registry.npmjs.org/react-native-web/-/react-native-web-0.18.12.tgz"
+  resolved "https://registry.yarnpkg.com/react-native-web/-/react-native-web-0.18.12.tgz#d4bb3a783ece2514ba0508d7805b09c0a98f5a8e"
   integrity sha512-fboP7yqobJ8InSr4fP+bQ3scOtSQtUoPcR+HWasH8b/fk/RO+mWcJs/8n+lewy9WTZc2D68ha7VwRDviUshEWA==
   dependencies:
     "@babel/runtime" "^7.18.6"

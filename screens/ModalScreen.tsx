@@ -100,6 +100,7 @@ export default function ModalScreen({navigation, route}: any) {
 
             <View style={styles.bodyModal}>
                 <View style={styles.listItem}>
+                    <Icon name="address-card-o" style={styles.iconItem} size={25} color={iconColor}/>
                     <Text style={styles.textItem}>
                         {data.member_uniqie_identifer}
                     </Text>
@@ -115,7 +116,7 @@ export default function ModalScreen({navigation, route}: any) {
                 <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
 
                 <View style={styles.listItem}>
-                    <Icon name="ambulance" style={styles.iconItem} size={25} color={iconColor}/>
+                    <Icon name="address-book-o" style={styles.iconItem} size={25} color={iconColor}/>
                     <Text style={styles.textItem}>
                         {data.origin}
                     </Text>
@@ -186,6 +187,7 @@ export default function ModalScreen({navigation, route}: any) {
                 {/*</View>*/}
                 {/*<EditScreenInfo path="/screens/ModalScreen.tsx"/>*/}
                 <View style={styles.buttonIcons}>
+
                     <TouchableOpacity style={styles.closeButton}
                                       onPress={() => {
                                           navigation.goBack();
@@ -195,6 +197,34 @@ export default function ModalScreen({navigation, route}: any) {
                                       }}>
                         <Icon2 name={'route'} size={35} color={iconColor}/>
                     </TouchableOpacity>
+                    <TouchableOpacity style={styles.closeButton}
+                                      onPress={() => {
+                                          navigation.goBack();
+                                          navigation.navigate('DriverRoute', {
+                                              id: clientId
+                                          })
+                                      }}>
+                        <Icon name="play-circle-o" style={styles.iconItem} size={30} color={iconColor}/>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.closeButton}
+                                      onPress={() => {
+                                          navigation.goBack();
+                                          navigation.navigate('DriverRoute', {
+                                              id: clientId
+                                          })
+                                      }}>
+                        <Icon name="check-circle-o" style={styles.iconItem} size={30} color={iconColor}/>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.closeButton}
+                                      onPress={() => {
+                                          navigation.goBack();
+                                          navigation.navigate('DriverRoute', {
+                                              id: clientId
+                                          })
+                                      }}>
+                        <Icon name="ban" style={styles.iconItem} size={30} color={iconColor}/>
+                    </TouchableOpacity>
+
                 </View>
             </View>
             {/* Use a light status bar on iOS to account for the black space above the modal */}
@@ -249,7 +279,8 @@ const styles = StyleSheet.create({
         marginVertical: 20,
     },
     closeButton: {
-        flexGrow: 0.5,
+       flexGrow:0,
+        marginHorizontal: 25,
         fontSize: 20,
         fontWeight: 'bolder',
     },
@@ -268,10 +299,11 @@ const styles = StyleSheet.create({
     textItem: {
         alignSelf: 'flex-start',
         fontSize: 15,
-        flex: 10,
+        flex: 8,
     },
     iconItem: {
         flex: 1,
+       /// justifyContent:'flex-start',
         flexDirection: "row"
     },
     iconPhone: {
@@ -296,8 +328,11 @@ const styles = StyleSheet.create({
 
     },
     buttonIcons: {
+        padding:25,
         flexDirection: 'row',
+       // flex:1,
         alignSelf: 'center',
+
     }
 
 });
