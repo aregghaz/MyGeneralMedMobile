@@ -10,4 +10,10 @@ export const ClientApi = {
     getClientRoute(id:number) {
         return axios.get(`${fakeUrl}/api/client-route-driver/${id}`).then(res => res.data)
     },
+    startTrip(id:number) {
+        return axios.get(`${fakeUrl}/api/start-trip/${id}`).then(res => res.data)
+    },
+    doneTrip(id:number) {
+        return axios.get(`${fakeUrl}/api/done-trip/${id}`).then(res => res.data)
+    },
 }

@@ -1,20 +1,15 @@
-import MapView, { LatLng, Marker, PROVIDER_GOOGLE } from "react-native-maps";
-import {
-    StyleSheet,
-    View,
-    Dimensions,
-    Text, TouchableOpacity,
-} from "react-native";
+import MapView, {LatLng, Marker, PROVIDER_GOOGLE} from "react-native-maps";
+import {Dimensions, StyleSheet, Text, TouchableOpacity, View,} from "react-native";
 
-import { GOOGLE_API_KEY } from "../environments";
+import {GOOGLE_API_KEY} from "../environments";
 import Constants from "expo-constants";
 import {useEffect, useRef, useState} from "react";
 import MapViewDirections from "react-native-maps-directions";
 import Geocoder from 'react-native-geocoding';
-import Icon2 from "react-native-vector-icons/FontAwesome5";
 import {ClientApi} from "../api/client";
-import { RootStackParamList } from "../types";
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { SwipeListView } from 'react-native-swipe-list-view';
+
 const iconColor = '#D63D3D';
 export default function RouteScreen({navigation, route}: any) {
 
@@ -25,6 +20,7 @@ export default function RouteScreen({navigation, route}: any) {
     const [showDirections, setShowDirections] = useState(false);
     const [distance, setDistance] = useState(0);
     const [duration, setDuration] = useState(0);
+    const [data, setData] = useState<{ origin: string, destination: string }>({destination: "", origin: ""});
     const mapRef = useRef<MapView>(null);
 
 
@@ -40,8 +36,8 @@ export default function RouteScreen({navigation, route}: any) {
     useEffect(() => {
         (async () => {
             const clientData = await ClientApi.getClientRoute(id)
-            console.log(clientData,  '333333ååå')
-           /// setData(clientData.client)
+            console.log(clientData, '333333ååå')
+            /// setData(clientData.client)
             await traceRoute(clientData)
         })()
     }, [])
@@ -52,20 +48,22 @@ export default function RouteScreen({navigation, route}: any) {
         }
     };
 
-    const traceRoute = async (route:{origin:string, origin_id:string,destination_id:string, destination:string}) => {
+    const traceRoute = async (route: { origin: string, origin_id: string, destination_id: string, destination: string }) => {
         Geocoder.init(GOOGLE_API_KEY);
-
+        setData(route)
         const dataTo = await Geocoder.from(route.origin)
-        var locationFrom = dataTo.results[0].geometry.location;
-        setDestination({
-            latitude: locationFrom.lat,
-            longitude: locationFrom.lng
-        })
         const datafrom = await Geocoder.from(route.destination)
+
+        var locationFrom = dataTo.results[0].geometry.location;
         var locationTO = datafrom.results[0].geometry.location;
-        setOrigin({
+
+        setDestination({
             latitude: locationTO.lat,
             longitude: locationTO.lng
+        })
+        setOrigin({
+            latitude: locationFrom.lat,
+            longitude: locationFrom.lng
         })
 
         setShowDirections(true);
@@ -79,7 +77,7 @@ export default function RouteScreen({navigation, route}: any) {
     };
 
 
-    return (
+    return data && (
         <View style={styles.container}>
             <MapView
                 ref={mapRef}
@@ -87,8 +85,14 @@ export default function RouteScreen({navigation, route}: any) {
                 provider={PROVIDER_GOOGLE}
                 // initialRegion={INITIAL_POSITION}
             >
-                {origin && <Marker coordinate={origin} />}
-                {destination && <Marker coordinate={destination} />}
+                {destination && <Marker
+                    title={`Drop down`}
+                    description={data.destination}
+                    coordinate={destination}/>}
+                {origin && <Marker title={`Pick up`}
+                                   description={data.origin}
+                                   coordinate={origin}/>}
+
                 {showDirections && origin && destination && (
                     <MapViewDirections
                         origin={origin}
@@ -110,7 +114,7 @@ export default function RouteScreen({navigation, route}: any) {
                 </TouchableOpacity>
                 {distance && duration ? (
                     <View style={styles.info}>
-                  {/*      <TouchableOpacity
+                        {/*      <TouchableOpacity
                                           onPress={() => {
                                               navigation.goBack();
 
@@ -140,11 +144,11 @@ const styles = StyleSheet.create({
     searchContainer: {
         position: "absolute",
         width: "90%",
-        display:"flex",
-        flexDirection:"row",
+        display: "flex",
+        flexDirection: "row",
         backgroundColor: "white",
         shadowColor: "black",
-        shadowOffset: { width: 2, height: 2 },
+        shadowOffset: {width: 2, height: 2},
         shadowOpacity: 0.5,
         shadowRadius: 4,
         elevation: 4,
@@ -165,18 +169,18 @@ const styles = StyleSheet.create({
     backButton: {
         //width: 50,
         margin: 5,
-        paddingHorizontal:15,
-        display:"flex",
-        borderRightWidth:1,
-        borderRightColor:iconColor,
-        flexDirection:"column",
+        paddingHorizontal: 15,
+        display: "flex",
+        borderRightWidth: 1,
+        borderRightColor: iconColor,
+        flexDirection: "column",
         textAlignVertical: "center",
 
     },
-    info:{
+    info: {
         margin: 5,
-        display:"flex",
-        flexDirection:"column"
+        display: "flex",
+        flexDirection: "column"
     },
     buttonText: {
         textAlign: "center",

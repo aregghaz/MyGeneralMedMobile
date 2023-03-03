@@ -1,23 +1,22 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
-    SafeAreaView,
-    View,
-    TextInput,
-    Image,
-    Text,
-    StyleSheet,
-    ScrollView,
-    StatusBar,
     Animated,
-    FlatList, TouchableOpacity,
+    FlatList,
+    Image,
+    RefreshControl,
+    SafeAreaView,
+    StatusBar,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from 'react-native';
 import {getFeatureViewAnimation} from '../utils';
 import {ClientApi} from "../api/client";
-import navigation from '../navigation';
-import { IClient } from '../types/client';
+import {IClient} from '../types/client';
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
-
 
 
 const UPPER_HEADER_HEIGHT = 35;
@@ -34,7 +33,7 @@ export default function Clients({navigation}: any) {
     useEffect(() => {
         (async () => {
             const clientData = await ClientApi.getClientsData()
-           /// console.log(clientData, 'clientData')
+            /// console.log(clientData, 'clientData')
             setData(clientData.clients)
         })()
     }, [])
@@ -92,8 +91,24 @@ export default function Clients({navigation}: any) {
             extrapolate: 'clamp',
         }),
     };
+    const [refreshing, setRefreshing] = React.useState(false);
 
-    return (
+    const onRefresh = React.useCallback(async () => {
+                setRefreshing(true);
+                try {
+                    const clientData = await ClientApi.getClientsData()
+                    console.log(clientData);
+                    setData(clientData.clients);
+                    setRefreshing(false)
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+            ,
+            [refreshing]
+        )
+    ;
+    return  (
         <View style={styles.container}>
             <StatusBar barStyle="light-content"/>
 
@@ -161,7 +176,7 @@ export default function Clients({navigation}: any) {
                             style={[styles.icon32, featureIconCircleAnimation]}
                         />
                         <Animated.Text style={[styles.featureName, featureNameAnimation]}>
-                           Notification
+                            Notification
                         </Animated.Text>
                     </Animated.View>
 
@@ -189,6 +204,9 @@ export default function Clients({navigation}: any) {
                 )}
                 keyExtractor={(item) => item.id.toString()}
                 contentContainerStyle={{marginVertical: 86}}
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>
+                }
                 renderItem={({item, index}) => {
                     return <TouchableOpacity style={{
                         // height:30,
@@ -206,9 +224,9 @@ export default function Clients({navigation}: any) {
                         shadowOpacity: .3,
                         shadowRadius: 20
                     }}
-                    onPress={() => {
-                        navigation.navigate('Modal',{'clientId': item.id})
-                    }}
+                                             onPress={() => {
+                                                 navigation.navigate('Modal', {'clientId': item.id})
+                                             }}
                     >
                         <Text style={styles.listText}>{item.fullName}</Text>
                         <Text style={styles.listText}>{item.pick_up}</Text>
@@ -265,7 +283,7 @@ const styles = StyleSheet.create({
     bell: {
         width: 16,
         height: 16,
-       // marginHorizontal: 32,
+        // marginHorizontal: 32,
     },
     avatar: {
         width: 28,
