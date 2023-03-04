@@ -34,15 +34,16 @@ const Login = () => {
                 style={[styles.logo, {height: height * 0.3}]}
                 resizeMode='contain'
             />
-            <Input
-                placeholder={'Username'}
-                name={'username'}
-                control={control}
-                rules={{required: 'Username is required', minLength:{value:3,message:'Username should be minimum 3 character length'}}}
-                secureTextEntry={false}
-
-            />
-
+     <View style={styles.input}>
+         <Input
+             placeholder={'Username'}
+             name={'username'}
+             control={control}
+             rules={{required: 'Username is required', minLength:{value:3,message:'Username should be minimum 3 character length'}}}
+             secureTextEntry={false}
+         />
+     </View>
+            <View style={styles.input}>
             <Input
                 placeholder={'Password'}
                 name={'password'}
@@ -50,6 +51,7 @@ const Login = () => {
                 rules={{required:'Password is required', minLength:{value:5,message:'Password should be minimum 5 character length'}}}
                 secureTextEntry={true}
             />
+            </View>
             <Button
                 text={loading ? 'Loading...' : 'Sign In'}
                 onPress={handleSubmit(handlerLogin)}
@@ -67,6 +69,11 @@ const styles = StyleSheet.create({
         width: "70%",
         maxWidth: 300,
         maxHeight: 200
-    }
+    },
+    input:{
+        height: 40,
+        width:"100%",
+        marginVertical:10
+    },
 })
 export default Login;

@@ -6,7 +6,6 @@ import {ClientApi} from "../api/client";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/FontAwesome5';
 import {useDispatch} from "react-redux";
-import {clientAction} from "../store/client";
 import {ALERT_TYPE, AlertNotificationRoot, Dialog} from 'react-native-alert-notification';
 import {useFocusEffect} from '@react-navigation/native';
 
@@ -107,176 +106,176 @@ export default function ModalScreen({navigation, route}: any) {
         const clientData = await ClientApi.doneTrip(clientId)
     }
     console.log(clientById, 'clientById')
-    return (<AlertNotificationRoot>
-            <View style={styles.container}>
-                <View style={styles.title}>
-                    <View style={styles.header}>
-                        <Text style={styles.titleSection}>{clientById.fullName}</Text>
-                        <Text style={styles.titleSmallSection}>{clientById.trip_id}</Text>
-                    </View>
-                    <View style={styles.closeButtonSection}>
-                        <TouchableOpacity style={styles.closeButton}
-                                          onPress={() =>  navigation.goBack()}>
-                            <Text> <Icon name="close" size={30} color={iconColor}/></Text>
-                        </TouchableOpacity>
-                    </View>
+    return (  <AlertNotificationRoot>
+        <View  style={styles.container}>
+            <View style={styles.title}>
+                <View style={styles.header}>
+                    <Text style={styles.titleSection}>{clientById.fullName}</Text>
+                    <Text style={styles.titleSmallSection}>{clientById.trip_id}</Text>
                 </View>
-                <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
-                <View style={styles.iconsSection}>
+                <View style={styles.closeButtonSection}>
+                    <TouchableOpacity style={styles.closeButton}
+                                      onPress={() => navigation.goBack()}>
+                        <Text> <Icon name="close" size={30} color={iconColor}/></Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+            <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
+            <View style={styles.iconsSection}>
 
-                    <View style={styles.iconView}>{clientById.gender === 'M' ?
-                        <Icon name="male" style={styles.iconItem} size={20} color={iconColor}/> :
-                        <Icon name="female" style={styles.iconItem} size={20} color={iconColor}/>}
-                    </View>
-                    <View style={styles.iconItem}>
-                        <Icon2 name="arrows-alt-v" size={20} color={iconColor}/>
-                        <Text>
-                            {clientById.height ? clientById.height : 0}
-                        </Text>
-                    </View>
-                    <View style={styles.iconItem}>
-                        <Icon2 name="weight" size={20} color={iconColor}/>
-                        <Text>
-                            {clientById.weight ? clientById.weight : 0}
-                        </Text>
-                    </View>
-
-                    <Text style={styles.iconView}>
-                        {clientById.request_type}
+                <View style={styles.iconView}>{clientById.gender === 'M' ?
+                    <Icon name="male" style={styles.iconItem} size={20} color={iconColor}/> :
+                    <Icon name="female" style={styles.iconItem} size={20} color={iconColor}/>}
+                </View>
+                <View style={styles.iconItem}>
+                    <Icon2 name="arrows-alt-v" size={20} color={iconColor}/>
+                    <Text>
+                        {clientById.height ? clientById.height : 0}
                     </Text>
                 </View>
-                <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
-
-                <View style={styles.bodyModal}>
-                    <View style={styles.listItem}>
-                        <Icon name="address-card-o" style={styles.iconItem} size={25} color={iconColor}/>
-                        <Text style={styles.textItem}>
-                            {clientById.member_uniqie_identifer}
-                        </Text>
-                    </View>
-                    <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
-
-                    <View style={styles.listItem}>
-                        <Icon name="clock-o" style={styles.iconItem} size={25} color={iconColor}/>
-                        <Text style={styles.textItem}>
-                            {clientById.pick_up}
-                        </Text>
-                    </View>
-                    <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
-
-                    <View style={styles.listItem}>
-                        <Icon name="address-book-o" style={styles.iconItem} size={25} color={iconColor}/>
-                        <Text style={styles.textItem}>
-                            {clientById.origin}
-                        </Text>
-                        <Icon name="phone" style={styles.iconPhone} size={25} color={iconColor} onPress={() => {
-                            Linking.openURL('tel:'+clientById.origin_phone);
-                        }}/>
-                    </View>
-                    <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
-
-                    <View style={styles.listItem}>
-                        <Icon name="comment-o" style={styles.iconItem} size={25} color={iconColor}/>
-                        <Text style={styles.textItem}>
-                            {clientById.origin_comment}
-                        </Text>
-                    </View>
-                    <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
-
-                    <View style={styles.listItem}>
-                        <Icon name="clock-o" style={styles.iconItem} size={25} color={iconColor}/>
-                        <Text style={styles.textItem}>
-                            {clientById.pick_up}
-                        </Text>
-                    </View>
-                    <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
-
-                    <View style={styles.listItem}>
-                        <Icon name="hospital-o" style={styles.iconItem} size={25} color={iconColor}/>
-                        <Text style={styles.textItem}>
-                            {clientById.destination}
-                        </Text>
-                        <Icon name="phone" style={styles.iconPhone} size={25} color={iconColor}  onPress={() => {
-                            Linking.openURL('tel:'+clientById.destination_phone);
-                        }}/>
-
-                    </View>
-                    <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
-
-                    <View style={styles.listItem}>
-                        <Icon name="comment-o" style={styles.iconItem} size={25} color={iconColor}/>
-                        <Text style={styles.textItem}>
-                            {clientById.destination_comment}
-                        </Text>
-                    </View>
-                    <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
-
-                    <View style={styles.listItem}>
-                        <Icon name="wheelchair" style={styles.iconItem} size={25} color={iconColor}/>
-                        <Text style={styles.textItem}>
-                            {clientById.los}
-                        </Text>
-                    </View>
-                    <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
-
-                    {/*<View style={styles.listItem}>*/}
-                    {/*    <Icon name="close" style={styles.iconItem} size={30} color={iconColor}/>*/}
-                    {/*</View>*/}
-                    {/*<View style={styles.listItem}>*/}
-                    {/*    <Icon name="ambulance" style={styles.iconItem} size={30} color={iconColor}/>*/}
-                    {/*</View>*/}
-                    {/*<View style={styles.listItem}>*/}
-                    {/*    <Icon name="hospital-o" style={styles.iconItem} size={30} color={iconColor}/>*/}
-                    {/*</View>*/}
-                    {/*<View style={styles.listItem}>*/}
-                    {/*    <Icon name="comment-o" style={styles.iconItem} size={30} color={iconColor}/>*/}
-                    {/*</View>*/}
-                    {/*<View style={styles.listItem}>*/}
-                    {/*    <Icon name="comments-o" style={styles.iconItem} size={30} color={iconColor}/>*/}
-                    {/*</View>*/}
-
-                    {/*<View style={styles.listItem}>*/}
-                    {/*    <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>*/}
-                    {/*</View>*/}
-                    {/*<EditScreenInfo path="/screens/ModalScreen.tsx"/>*/}
-                    <View style={styles.buttonIcons}>
-
-                        <TouchableOpacity style={styles.closeButton}
-                                          onPress={() => {
-                                              navigation.goBack();
-                                              navigation.navigate('DriverRoute', {
-                                                  id: clientId
-                                              })
-                                          }}>
-                            <Icon2 name={'route'} size={35} color={iconColor}/>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity style={styles.closeButton}
-                                          onPress={() => handlerStart()}>
-                            <Icon name="play-circle-o" style={styles.iconItem} size={30} color={iconColor}/>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.closeButton}
-                                          onPress={() => {
-                                              navigation.goBack();
-                                              handlerDone(clientId)
-                                          }}>
-                            <Icon name="check-circle-o" style={styles.iconItem} size={30} color={iconColor}/>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.closeButton}
-                                          onPress={() => {
-                                              navigation.goBack();
-                                              navigation.navigate('DriverRoute', {
-                                                  id: clientId
-                                              })
-                                          }}>
-                            <Icon name="ban" style={styles.iconItem} size={30} color={iconColor}/>
-                        </TouchableOpacity>
-
-                    </View>
+                <View style={styles.iconItem}>
+                    <Icon2 name="weight" size={20} color={iconColor}/>
+                    <Text>
+                        {clientById.weight ? clientById.weight : 0}
+                    </Text>
                 </View>
-                {/* Use a light status bar on iOS to account for the black space above the modal */}
-                <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'}/>
-            </View></AlertNotificationRoot>
+
+                <Text style={styles.iconView}>
+                    {clientById.request_type}
+                </Text>
+            </View>
+            <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
+
+            <View style={styles.bodyModal}>
+                <View style={styles.listItem}>
+                    <Icon name="address-card-o" style={styles.iconItem} size={25} color={iconColor}/>
+                    <Text style={styles.textItem}>
+                        {clientById.member_uniqie_identifer}
+                    </Text>
+                </View>
+                <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
+
+                <View style={styles.listItem}>
+                    <Icon name="clock-o" style={styles.iconItem} size={25} color={iconColor}/>
+                    <Text style={styles.textItem}>
+                        {clientById.pick_up}
+                    </Text>
+                </View>
+                <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
+
+                <View style={styles.listItem}>
+                    <Icon name="address-book-o" style={styles.iconItem} size={25} color={iconColor}/>
+                    <Text style={styles.textItem}>
+                        {clientById.origin}
+                    </Text>
+                    <Icon name="phone" style={styles.iconPhone} size={25} color={iconColor} onPress={() => {
+                        Linking.openURL('tel:' + clientById.origin_phone);
+                    }}/>
+                </View>
+                <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
+
+                <View style={styles.listItem}>
+                    <Icon name="comment-o" style={styles.iconItem} size={25} color={iconColor}/>
+                    <Text style={styles.textItem}>
+                        {clientById.origin_comment}
+                    </Text>
+                </View>
+                <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
+
+                <View style={styles.listItem}>
+                    <Icon name="clock-o" style={styles.iconItem} size={25} color={iconColor}/>
+                    <Text style={styles.textItem}>
+                        {clientById.pick_up}
+                    </Text>
+                </View>
+                <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
+
+                <View style={styles.listItem}>
+                    <Icon name="hospital-o" style={styles.iconItem} size={25} color={iconColor}/>
+                    <Text style={styles.textItem}>
+                        {clientById.destination}
+                    </Text>
+                    <Icon name="phone" style={styles.iconPhone} size={25} color={iconColor} onPress={() => {
+                        Linking.openURL('tel:' + clientById.destination_phone);
+                    }}/>
+
+                </View>
+                <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
+
+                <View style={styles.listItem}>
+                    <Icon name="comment-o" style={styles.iconItem} size={25} color={iconColor}/>
+                    <Text style={styles.textItem}>
+                        {clientById.destination_comment}
+                    </Text>
+                </View>
+                <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
+
+                <View style={styles.listItem}>
+                    <Icon name="wheelchair" style={styles.iconItem} size={25} color={iconColor}/>
+                    <Text style={styles.textItem}>
+                        {clientById.los}
+                    </Text>
+                </View>
+                <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
+
+                {/*<View style={styles.listItem}>*/}
+                {/*    <Icon name="close" style={styles.iconItem} size={30} color={iconColor}/>*/}
+                {/*</View>*/}
+                {/*<View style={styles.listItem}>*/}
+                {/*    <Icon name="ambulance" style={styles.iconItem} size={30} color={iconColor}/>*/}
+                {/*</View>*/}
+                {/*<View style={styles.listItem}>*/}
+                {/*    <Icon name="hospital-o" style={styles.iconItem} size={30} color={iconColor}/>*/}
+                {/*</View>*/}
+                {/*<View style={styles.listItem}>*/}
+                {/*    <Icon name="comment-o" style={styles.iconItem} size={30} color={iconColor}/>*/}
+                {/*</View>*/}
+                {/*<View style={styles.listItem}>*/}
+                {/*    <Icon name="comments-o" style={styles.iconItem} size={30} color={iconColor}/>*/}
+                {/*</View>*/}
+
+                {/*<View style={styles.listItem}>*/}
+                {/*    <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>*/}
+                {/*</View>*/}
+                {/*<EditScreenInfo path="/screens/ModalScreen.tsx"/>*/}
+                <View style={styles.buttonIcons}>
+
+                    <TouchableOpacity style={styles.closeButton}
+                                      onPress={() => {
+                                          navigation.goBack();
+                                          navigation.navigate('DriverRoute', {
+                                              id: clientId
+                                          })
+                                      }}>
+                        <Icon2 name={'route'} size={35} color={iconColor}/>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.closeButton}
+                                      onPress={() => handlerStart()}>
+                        <Icon name="play-circle-o" style={styles.iconItem} size={30} color={iconColor}/>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.closeButton}
+                                      onPress={() => {
+                                          navigation.goBack();
+                                          handlerDone(clientId)
+                                      }}>
+                        <Icon name="check-circle-o" style={styles.iconItem} size={30} color={iconColor}/>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.closeButton}
+                                      onPress={() => {
+                                          navigation.goBack();
+                                          navigation.navigate('DriverRoute', {
+                                              id: clientId
+                                          })
+                                      }}>
+                        <Icon name="ban" style={styles.iconItem} size={30} color={iconColor}/>
+                    </TouchableOpacity>
+
+                </View>
+            </View>
+            {/* Use a light status bar on iOS to account for the black space above the modal */}
+            <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'}/>
+        </View></AlertNotificationRoot>
     );
 }
 
