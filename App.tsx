@@ -22,9 +22,11 @@ export default function App() {
     } else {
         return (
             <SafeAreaProvider>
+                <AlertNotificationRoot>
                     <Provider store={store}>
                         <Navigation colorScheme={colorScheme}/>
                     </Provider>
+                </AlertNotificationRoot>
                 {/*<LoginScreen />*/}
             </SafeAreaProvider>
         );

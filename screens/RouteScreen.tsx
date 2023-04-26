@@ -8,7 +8,6 @@ import MapViewDirections from "react-native-maps-directions";
 import Geocoder from 'react-native-geocoding';
 import {ClientApi} from "../api/client";
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { SwipeListView } from 'react-native-swipe-list-view';
 
 const iconColor = '#D63D3D';
 export default function RouteScreen({navigation, route}: any) {
@@ -16,11 +15,16 @@ export default function RouteScreen({navigation, route}: any) {
     const {id} = route.params
     const [origin, setOrigin] = useState<LatLng | null>();
     const [destination, setDestination] = useState<LatLng | null>();
+    const [waypoints, setWaypoints] = useState<any>([]);
 
     const [showDirections, setShowDirections] = useState(false);
     const [distance, setDistance] = useState(0);
     const [duration, setDuration] = useState(0);
-    const [data, setData] = useState<{ origin: string, destination: string }>({destination: "", origin: ""});
+    const [data, setData] = useState<{ origin: string, destination: string, waypoint: any }>({
+        destination: "",
+        origin: "",
+        waypoint: []
+    });
     const mapRef = useRef<MapView>(null);
 
 
@@ -43,14 +47,33 @@ export default function RouteScreen({navigation, route}: any) {
     }, [])
     const traceRouteOnReady = (args: any) => {
         if (args) {
-            setDistance(args.distance);
+            console.log(args, 'argsargs')
+            setDistance(args.distance/ 1.6);
             setDuration(args.duration);
         }
     };
 
-    const traceRoute = async (route: { origin: string, origin_id: string, destination_id: string, destination: string }) => {
+    const traceRoute = async (route: { origin: string, origin_id: string, destination_id: string, destination: string, waypoint: Array<any> }) => {
         Geocoder.init(GOOGLE_API_KEY);
+
+
+        console.log(route, 'routeroute')
         setData(route)
+        for (const item of route.waypoint) {
+            console.log(item,'item')
+            await Geocoder.from(item)
+                .then(json => {
+                    var location = json.results[0].geometry.location;
+                    setWaypoints((state: any) => {
+                        return [
+                            ...state, {location:location , address : item}
+                        ]
+                    })
+                })
+                .catch(error => console.warn(error));
+        }
+
+        ///   setWaypoints(route.waypoint)
         const dataTo = await Geocoder.from(route.origin)
         const datafrom = await Geocoder.from(route.destination)
 
@@ -77,7 +100,7 @@ export default function RouteScreen({navigation, route}: any) {
     };
 
 
-    return data && (
+    return data && waypoints.length> 0&& (
         <View style={styles.container}>
             <MapView
                 ref={mapRef}
@@ -89,9 +112,16 @@ export default function RouteScreen({navigation, route}: any) {
                     title={`Drop down`}
                     description={data.destination}
                     coordinate={destination}/>}
+
                 {origin && <Marker title={`Pick up`}
                                    description={data.origin}
                                    coordinate={origin}/>}
+                {waypoints.map((item: any, index:number) => {
+                    console.log(item, 'itemitemitemitem')
+                    return (<Marker title={`Step ${index+1}`}
+                                    description={`${item.address}`}
+                                    coordinate={{latitude :item.location.lat, longitude: item.location.lng}}/>)
+                })}
 
                 {showDirections && origin && destination && (
                     <MapViewDirections
@@ -100,6 +130,8 @@ export default function RouteScreen({navigation, route}: any) {
                         apikey={GOOGLE_API_KEY}
                         strokeColor="#6644ff"
                         strokeWidth={4}
+                        optimizeWaypoints={true}
+                        waypoints={data.waypoint}
                         onReady={traceRouteOnReady}
                     />
                 )}

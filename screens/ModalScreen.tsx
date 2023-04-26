@@ -1,46 +1,15 @@
 import {StatusBar} from 'expo-status-bar';
-import {Linking, Platform, StyleSheet, TouchableOpacity} from 'react-native';
+import {Linking, Platform, ScrollView, StyleSheet, TouchableOpacity} from 'react-native';
 import {Text, View} from '../components/Themed';
 import React, {useState} from "react";
 import {ClientApi} from "../api/client";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/FontAwesome5';
 import {useDispatch} from "react-redux";
-import {ALERT_TYPE, AlertNotificationRoot, Dialog} from 'react-native-alert-notification';
 import {useFocusEffect} from '@react-navigation/native';
+import {openNotification} from "../utils";
+import {IClientData} from "../types/client";
 
-const IClientData = {
-    id: 0,
-    trip_id: 0,
-    fullName: '',
-    gender: "",
-    pick_up_address: "",
-    los: "",
-    phone_number: "",
-    date_of_service: "",
-    appointment_time: "",
-    pick_up: "",
-    drop_down: "",
-    request_type: 0,
-    status: 0,
-    origin: "",
-    origin_id: "",
-    origin_phone: "",
-    origin_comment: '',
-    destination: '',
-    destination_id: '',
-    destination_phone: '',
-    destination_comment: '',
-    height: 0,
-    weight: 0,
-    escortType: 0,
-    type_of_trip: 0,
-    miles: 0,
-    member_uniqie_identifer: 0,
-    birthday: 0,
-    additionalNote: '',
-    operator_note: ''
-}
 
 const iconColor = '#D63D3D';
 export default function ModalScreen({navigation, route}: any) {
@@ -73,28 +42,29 @@ export default function ModalScreen({navigation, route}: any) {
             //  return () => clientData();
         }, [clientId])
     );
-    const handlerStart = async () => {
-        // const clientData = await ClientApi.startTrip(clientId)
+    const handlerAction = async (action: number) => {
+        let clientData;
         try {
-            const clientData = await ClientApi.startTrip(clientId)
+            if (action === 1) {
+                clientData = await ClientApi.startTrip(clientId)
+            } else if (action === 2) {
+                clientData = await ClientApi.doneTrip(clientId)
+            }
 
             if (clientData.status === 1) {
-                console.log(clientData, 'data')
-                Dialog.show({
-                    type: ALERT_TYPE.DANGER,
-                    title: clientData.tripId,
-                    textBody: 'You can\'t start a new trip until you have not completed a previous trip',
-                    button: 'Go',
-                    onPressButton: () => {
-                        navigation.navigate('Modal', {'clientId': clientData.clientId})
-                        Dialog.hide()
-                    }
-                })
+                openNotification(clientData, navigation, action)
+            } else if (clientData.status === 2) {
+
             } else {
                 navigation.goBack();
-                navigation.navigate('DriverRoute', {
-                    id: clientId
-                })
+                if (action === 1) {
+                    navigation.navigate('DriverRoute', {
+                        id: clientId
+                    })
+                } else if (action === 2) {
+
+                }
+
             }
         } catch (e) {
             console.log(e)
@@ -106,8 +76,9 @@ export default function ModalScreen({navigation, route}: any) {
         const clientData = await ClientApi.doneTrip(clientId)
     }
     console.log(clientById, 'clientById')
-    return (<AlertNotificationRoot>
-            <View style={styles.container}>
+    return (
+        <View style={styles.container}>
+            <ScrollView>
                 <View style={styles.title}>
                     <View style={styles.header}>
                         <Text style={styles.titleSection}>{clientById.fullName}</Text>
@@ -120,9 +91,8 @@ export default function ModalScreen({navigation, route}: any) {
                         </TouchableOpacity>
                     </View>
                 </View>
-                <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
+                <View style={styles.separator} lightColor="#070A52" darkColor="rgba(255,255,255,0.1)"/>
                 <View style={styles.iconsSection}>
-
                     <View style={styles.iconView}>{clientById.gender === 'M' ?
                         <Icon name="male" style={styles.iconItem} size={20} color={iconColor}/> :
                         <Icon name="female" style={styles.iconItem} size={20} color={iconColor}/>}
@@ -144,7 +114,7 @@ export default function ModalScreen({navigation, route}: any) {
                         {clientById.request_type}
                     </Text>
                 </View>
-                <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
+                <View style={styles.separator} lightColor="#070A52" darkColor="rgba(255,255,255,0.1)"/>
 
                 <View style={styles.bodyModal}>
                     <View style={styles.listItem}>
@@ -153,91 +123,65 @@ export default function ModalScreen({navigation, route}: any) {
                             {clientById.member_uniqie_identifer}
                         </Text>
                     </View>
-                    <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
+                    {/*<View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>*/}
+                    {clientById.address.map((item: {
+                        address_comments: string;
+                        drop_down: string;
+                        stops: number;
+                        pick_up: any;
+                        address_phone: string;
+                        address: string;
+                    }, index: number) => {
 
-                    <View style={styles.listItem}>
-                        <Icon name="clock-o" style={styles.iconItem} size={25} color={iconColor}/>
-                        <Text style={styles.textItem}>
-                            {clientById.pick_up}
-                        </Text>
-                    </View>
-                    <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
+                        return (<View key={index} style={styles.address}>
+                            <Text style={styles.step}>Step {index + 1}</Text>
+                            <View style={styles.listItem}>
+                                <Icon name="address-book-o" style={styles.iconItem} size={25} color={iconColor}/>
+                                <Text style={styles.textItem}>
+                                    {item.address}
+                                </Text>
+                                <Icon name="phone" style={styles.iconPhone} size={25} color={iconColor} onPress={() => {
+                                    Linking.openURL('tel:' + item.address_phone);
+                                }}/>
+                            </View>
+                            <View style={styles.separatorList} lightColor="#070A52" darkColor="rgba(255,255,255,0.1)"/>
+                            {
+                                index === 0 ? (<View style={styles.listItem}>
+                                    <Icon name="clock-o" style={styles.iconItem} size={25} color={iconColor}/>
+                                    <Text style={styles.textItem}>
+                                        {item.pick_up}
+                                    </Text>
+                                </View>) : (index === clientById.stops ? <><View style={styles.listItem}>
+                                    <Icon name="clock-o" style={styles.iconItem} size={25} color={iconColor}/>
+                                    <Text style={styles.textItem}>
+                                        {item.pick_up}
+                                    </Text>
+                                </View><View style={styles.listItem}>
+                                    <Icon name="clock-o" style={styles.iconItem} size={25} color={iconColor}/>
+                                    <Text style={styles.textItem}>
+                                        {item.drop_down}
+                                    </Text>
+                                </View></> : <View style={styles.listItem}>
+                                    <Icon name="clock-o" style={styles.iconItem} size={25} color={iconColor}/>
+                                    <Text style={styles.textItem}>
+                                        {item.drop_down}
+                                    </Text>
+                                </View>)
+                            }
 
-                    <View style={styles.listItem}>
-                        <Icon name="address-book-o" style={styles.iconItem} size={25} color={iconColor}/>
-                        <Text style={styles.textItem}>
-                            {clientById.origin}
-                        </Text>
-                        <Icon name="phone" style={styles.iconPhone} size={25} color={iconColor} onPress={() => {
-                            Linking.openURL('tel:' + clientById.origin_phone);
-                        }}/>
-                    </View>
-                    <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
+                            <View style={styles.separatorList} lightColor="#070A52" darkColor="rgba(255,255,255,0.1)"/>
+                            <View style={styles.listItem}>
+                                <Icon name="comment-o" style={styles.iconItem} size={25} color={iconColor}/>
+                                <Text style={styles.textItem}>
+                                    {item.address_comments}
+                                </Text>
+                            </View>
 
-                    <View style={styles.listItem}>
-                        <Icon name="comment-o" style={styles.iconItem} size={25} color={iconColor}/>
-                        <Text style={styles.textItem}>
-                            {clientById.origin_comment}
-                        </Text>
-                    </View>
-                    <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
+                            <View style={styles.separatorList} lightColor="#070A52" darkColor="rgba(255,255,255,0.1)"/>
+                        </View>)
+                    })}
 
-                    <View style={styles.listItem}>
-                        <Icon name="clock-o" style={styles.iconItem} size={25} color={iconColor}/>
-                        <Text style={styles.textItem}>
-                            {clientById.pick_up}
-                        </Text>
-                    </View>
-                    <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
 
-                    <View style={styles.listItem}>
-                        <Icon name="hospital-o" style={styles.iconItem} size={25} color={iconColor}/>
-                        <Text style={styles.textItem}>
-                            {clientById.destination}
-                        </Text>
-                        <Icon name="phone" style={styles.iconPhone} size={25} color={iconColor} onPress={() => {
-                            Linking.openURL('tel:' + clientById.destination_phone);
-                        }}/>
-
-                    </View>
-                    <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
-
-                    <View style={styles.listItem}>
-                        <Icon name="comment-o" style={styles.iconItem} size={25} color={iconColor}/>
-                        <Text style={styles.textItem}>
-                            {clientById.destination_comment}
-                        </Text>
-                    </View>
-                    <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
-
-                    <View style={styles.listItem}>
-                        <Icon name="wheelchair" style={styles.iconItem} size={25} color={iconColor}/>
-                        <Text style={styles.textItem}>
-                            {clientById.los}
-                        </Text>
-                    </View>
-                    <View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
-
-                    {/*<View style={styles.listItem}>*/}
-                    {/*    <Icon name="close" style={styles.iconItem} size={30} color={iconColor}/>*/}
-                    {/*</View>*/}
-                    {/*<View style={styles.listItem}>*/}
-                    {/*    <Icon name="ambulance" style={styles.iconItem} size={30} color={iconColor}/>*/}
-                    {/*</View>*/}
-                    {/*<View style={styles.listItem}>*/}
-                    {/*    <Icon name="hospital-o" style={styles.iconItem} size={30} color={iconColor}/>*/}
-                    {/*</View>*/}
-                    {/*<View style={styles.listItem}>*/}
-                    {/*    <Icon name="comment-o" style={styles.iconItem} size={30} color={iconColor}/>*/}
-                    {/*</View>*/}
-                    {/*<View style={styles.listItem}>*/}
-                    {/*    <Icon name="comments-o" style={styles.iconItem} size={30} color={iconColor}/>*/}
-                    {/*</View>*/}
-
-                    {/*<View style={styles.listItem}>*/}
-                    {/*    <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>*/}
-                    {/*</View>*/}
-                    {/*<EditScreenInfo path="/screens/ModalScreen.tsx"/>*/}
                     <View style={styles.buttonIcons}>
 
                         <TouchableOpacity style={styles.closeButton}
@@ -251,14 +195,11 @@ export default function ModalScreen({navigation, route}: any) {
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.closeButton}
-                                          onPress={() => handlerStart()}>
+                                          onPress={() => handlerAction(1)}>
                             <Icon name="play-circle-o" style={styles.iconItem} size={30} color={iconColor}/>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.closeButton}
-                                          onPress={() => {
-                                              navigation.goBack();
-                                              handlerDone(clientId)
-                                          }}>
+                                          onPress={() => handlerAction(2)}>
                             <Icon name="check-circle-o" style={styles.iconItem} size={30} color={iconColor}/>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.closeButton}
@@ -275,14 +216,19 @@ export default function ModalScreen({navigation, route}: any) {
                 </View>
                 {/* Use a light status bar on iOS to account for the black space above the modal */}
                 <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'}/>
-            </View>
-        </AlertNotificationRoot>
+            </ScrollView>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        display: "flex",
+        paddingTop: 15,
+        height: "100%"
+        /// overflow:"scroll",
+        // height:100
     },
     header: {
         flex: 1,
@@ -299,7 +245,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
     },
     separator: {
-        borderColor: "black",
+        borderColor: "#070A52",
         borderWidth: 1,
         height: 1,
         flexDirection: "column",
@@ -333,7 +279,7 @@ const styles = StyleSheet.create({
     },
     bodyModal: {
         paddingHorizontal: 20,
-        flex: 20,
+        ///flex: 20,
         height: "100%"
     },
     listItem: {
@@ -374,12 +320,23 @@ const styles = StyleSheet.create({
         ///flexWrap: 'wrap',
 
     },
+    address: {
+        borderColor: '#070A52',
+        borderLeftWidth: 1,
+        ///paddingVertical:10,
+        paddingHorizontal: 10,
+        marginBottom: 10
+    },
     buttonIcons: {
         padding: 25,
         flexDirection: 'row',
         // flex:1,
         alignSelf: 'center',
 
+    },
+    step: {
+        textAlign: "center",
+        marginBottom: 10
     }
 
 });
