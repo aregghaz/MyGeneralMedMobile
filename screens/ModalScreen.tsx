@@ -76,9 +76,10 @@ export default function ModalScreen({navigation, route}: any) {
         const clientData = await ClientApi.doneTrip(clientId)
     }
     console.log(clientById, 'clientById')
+    // @ts-ignore
     return (
         <View style={styles.container}>
-            <ScrollView>
+            <ScrollView style={styles.scrollView}>
                 <View style={styles.title}>
                     <View style={styles.header}>
                         <Text style={styles.titleSection}>{clientById.fullName}</Text>
@@ -92,115 +93,122 @@ export default function ModalScreen({navigation, route}: any) {
                     </View>
                 </View>
                 <View style={styles.separator} lightColor="#070A52" darkColor="rgba(255,255,255,0.1)"/>
-                <View style={styles.iconsSection}>
-                    <View style={styles.iconView}>{clientById.gender === 'M' ?
-                        <Icon name="male" style={styles.iconItem} size={20} color={iconColor}/> :
-                        <Icon name="female" style={styles.iconItem} size={20} color={iconColor}/>}
-                    </View>
-                    <View style={styles.iconItem}>
-                        <Icon2 name="arrows-alt-v" size={20} color={iconColor}/>
-                        <Text>
-                            {clientById.height ? clientById.height : 0}
-                        </Text>
-                    </View>
-                    <View style={styles.iconItem}>
-                        <Icon2 name="weight" size={20} color={iconColor}/>
-                        <Text>
-                            {clientById.weight ? clientById.weight : 0}
-                        </Text>
-                    </View>
+                <View style={styles.iconsWrapper}>
+                    <View style={styles.iconsSection}>
+                        <View style={[ styles.iconView, styles.iconGender]}>{clientById.gender === 'M' ?
+                            <Icon name="male" style={styles.iconItem} size={20} color={iconColor}/> :
+                            <Icon name="female" style={styles.iconItem} size={20} color={iconColor}/>}
+                        </View>
+                        <View style={[styles.iconItem, styles.iconView]}>
+                            <Icon2 name="arrows-alt-v" size={20} color={iconColor}/>
+                            <Text style={styles.iconText}>
+                                {clientById.height ? clientById.height : 0}
+                            </Text>
+                        </View>
+                        <View style={[styles.iconItem, styles.iconView]}>
+                            <Icon2 name="weight" size={20} color={iconColor}/>
+                            <Text style={styles.iconText}>
+                                {clientById.weight ? clientById.weight : 0}
+                            </Text>
+                        </View>
+                            <Text style={[styles.iconView, styles.iconPick]}>
+                                {clientById.request_type}
+                            </Text>
 
-                    <Text style={styles.iconView}>
-                        {clientById.request_type}
-                    </Text>
+                    </View>
                 </View>
-                <View style={styles.separator} lightColor="#070A52" darkColor="rgba(255,255,255,0.1)"/>
+
+                <View style={[styles.separator, styles.separatorCard]} lightColor="#070A52" darkColor="rgba(255,255,255,0.1)"/>
 
                 <View style={styles.bodyModal}>
-                    <View style={styles.listItem}>
-                        <Icon name="address-card-o" style={styles.iconItem} size={25} color={iconColor}/>
-                        <Text style={styles.textItem}>
-                            {clientById.member_uniqie_identifer}
-                        </Text>
-                    </View>
-                    {/*<View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>*/}
-                    {clientById.address.map((item: {
-                        address_comments: string;
-                        drop_down: string;
-                        stops: number;
-                        pick_up: any;
-                        address_phone: string;
-                        address: string;
-                    }, index: number) => {
-
-                        return (<View key={index} style={styles.address}>
-                            <Text style={styles.step}>Step {index + 1}</Text>
-                            <View style={styles.listItem}>
-                                <Icon name="address-book-o" style={styles.iconItem} size={25} color={iconColor}/>
-                                <Text style={styles.textItem}>
-                                    {item.address}
+                    <View  style={styles.stepsWrapper}>
+                        <ScrollView>
+                            <View style={[styles.listItem, styles.addressCard]}>
+                                <Icon name="address-card-o" style={styles.iconItem} size={25} color={iconColor}/>
+                                <Text style={[styles.textItem, styles.textCard]}>
+                                    {clientById.member_uniqie_identifer}
                                 </Text>
-                                <Icon name="phone" style={styles.iconPhone} size={25} color={iconColor} onPress={() => {
-                                    Linking.openURL('tel:' + item.address_phone);
-                                }}/>
                             </View>
                             <View style={styles.separatorList} lightColor="#070A52" darkColor="rgba(255,255,255,0.1)"/>
-                            {
-                                index === 0 ? (<View style={styles.listItem}>
-                                    <Icon name="clock-o" style={styles.iconItem} size={25} color={iconColor}/>
-                                    <Text style={styles.textItem}>
-                                        {item.pick_up}
-                                    </Text>
-                                </View>) : (index === clientById.stops ? <><View style={styles.listItem}>
-                                    <Icon name="clock-o" style={styles.iconItem} size={25} color={iconColor}/>
-                                    <Text style={styles.textItem}>
-                                        {item.pick_up}
-                                    </Text>
-                                </View><View style={styles.listItem}>
-                                    <Icon name="clock-o" style={styles.iconItem} size={25} color={iconColor}/>
-                                    <Text style={styles.textItem}>
-                                        {item.drop_down}
-                                    </Text>
-                                </View></> : <View style={styles.listItem}>
-                                    <Icon name="clock-o" style={styles.iconItem} size={25} color={iconColor}/>
-                                    <Text style={styles.textItem}>
-                                        {item.drop_down}
-                                    </Text>
+
+                            {/*<View style={styles.separatorList} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>*/}
+                            {clientById.address.map((item: {
+                                address_comments: string;
+                                drop_down: string;
+                                stops: number;
+                                pick_up: any;
+                                address_phone: string;
+                                address: string;
+                            }, index: number) => {
+
+                                return (<View key={index} style={styles.address}>
+                                    <Text style={styles.step}>Step {index + 1}</Text>
+                                    <View style={styles.listItem}>
+                                        <Icon name="address-book-o" style={styles.iconItem} size={25} color={iconColor}/>
+                                        <Text style={styles.textItem}>
+                                            {item.address}
+                                        </Text>
+                                        <Icon name="phone" style={styles.iconPhone} size={25} color={iconColor} onPress={() => {
+                                            Linking.openURL('tel:' + item.address_phone);
+                                        }}/>
+                                    </View>
+                                    <View style={styles.separatorList} lightColor="#070A52" darkColor="rgba(255,255,255,0.1)"/>
+                                    {
+                                        index === 0 ? (<View style={styles.listItem}>
+                                            <Icon name="clock-o" style={styles.iconItem} size={25} color={iconColor}/>
+                                            <Text style={styles.textItem}>
+                                                {item.pick_up}
+                                            </Text>
+                                        </View>) : (index === clientById.stops ? <><View style={styles.listItem}>
+                                            <Icon name="clock-o" style={styles.iconItem} size={25} color={iconColor}/>
+                                            <Text style={styles.textItem}>
+                                                {item.pick_up}
+                                            </Text>
+                                        </View><View style={styles.listItem}>
+                                            <Icon name="clock-o" style={styles.iconItem} size={25} color={iconColor}/>
+                                            <Text style={styles.textItem}>
+                                                {item.drop_down}
+                                            </Text>
+                                        </View></> : <View style={styles.listItem}>
+                                            <Icon name="clock-o" style={styles.iconItem} size={25} color={iconColor}/>
+                                            <Text style={styles.textItem}>
+                                                {item.drop_down}
+                                            </Text>
+                                        </View>)
+                                    }
+
+                                    <View style={styles.separatorList} lightColor="#070A52" darkColor="rgba(255,255,255,0.1)"/>
+                                    <View style={styles.listItem}>
+                                        <Icon name="comment-o" style={styles.iconItem} size={25} color={iconColor}/>
+                                        <Text style={styles.textItem}>
+                                            {item.address_comments}
+                                        </Text>
+                                    </View>
+
+                                    <View style={styles.separatorList} lightColor="#070A52" darkColor="rgba(255,255,255,0.1)"/>
                                 </View>)
-                            }
+                            })}
 
-                            <View style={styles.separatorList} lightColor="#070A52" darkColor="rgba(255,255,255,0.1)"/>
-                            <View style={styles.listItem}>
-                                <Icon name="comment-o" style={styles.iconItem} size={25} color={iconColor}/>
-                                <Text style={styles.textItem}>
-                                    {item.address_comments}
-                                </Text>
-                            </View>
+                        </ScrollView>
 
-                            <View style={styles.separatorList} lightColor="#070A52" darkColor="rgba(255,255,255,0.1)"/>
-                        </View>)
-                    })}
+
+                    </View>
 
 
                     <View style={styles.buttonIcons}>
 
-                        <TouchableOpacity style={styles.closeButton}
-                                          onPress={() => {
-                                              navigation.goBack();
-                                              navigation.navigate('DriverRoute', {
-                                                  id: clientId
-                                              })
-                                          }}>
-                            <Icon2 name={'route'} size={35} color={iconColor}/>
-                        </TouchableOpacity>
+
 
                         <TouchableOpacity style={styles.closeButton}
                                           onPress={() => handlerAction(1)}>
                             <Icon name="play-circle-o" style={styles.iconItem} size={30} color={iconColor}/>
+                            <Text style={styles.buttonText}>Start Trip</Text>
                         </TouchableOpacity>
+
                         <TouchableOpacity style={styles.closeButton}
                                           onPress={() => handlerAction(2)}>
                             <Icon name="check-circle-o" style={styles.iconItem} size={30} color={iconColor}/>
+                            <Text style={styles.buttonText}>Done Trip</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.closeButton}
                                           onPress={() => {
@@ -210,6 +218,18 @@ export default function ModalScreen({navigation, route}: any) {
                                               })
                                           }}>
                             <Icon name="ban" style={styles.iconItem} size={30} color={iconColor}/>
+                            <Text style={styles.buttonText}>On Hold</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={[styles.closeButton, styles.mapButton]}
+                                          onPress={() => {
+                                              navigation.goBack();
+                                              navigation.navigate('DriverRoute', {
+                                                  id: clientId
+                                              })
+                                          }}>
+                            <Icon2 name={'route'} size={35} color={iconColor}/>
+                            <Text style={styles.buttonText}>Route</Text>
                         </TouchableOpacity>
 
                     </View>
@@ -226,31 +246,49 @@ const styles = StyleSheet.create({
         flex: 1,
         display: "flex",
         paddingTop: 15,
-        height: "100%"
+        height: "100%",
         /// overflow:"scroll",
         // height:100
+        // backgroundColor: "red"
+        // borderStyle: "solid",
+        // borderWidth: 2,
+        // borderColor: "red"
+    },
+    scrollView: {
+        marginTop:50,
     },
     header: {
         flex: 1,
         marginVertical: 20,
+
+
     },
     title: {
         flexDirection: "row",
         fontSize: 20,
         fontWeight: 'bold',
+        borderStyle: "solid",
+        borderBottomWidth: 2,
+        borderColor: "#D63D3D"
     },
     titleSmallSection: {
         flexDirection: "row",
         fontSize: 10,
         marginHorizontal: 20,
+        // borderStyle: "solid",
+        // borderWidth: 2,
+        // borderColor: "red"
     },
     separator: {
-        borderColor: "#070A52",
-        borderWidth: 1,
-        height: 1,
+        // borderColor: "#070A52",
+        // borderWidth: 1,
+        // height: 1,
         flexDirection: "column",
         marginVertical: 10,
         width: '100%',
+        // borderStyle: "solid",
+        // borderWidth: 2,
+        // borderColor: "red"
     },
     separatorList: {
         ///   borderColor: "black",
@@ -259,28 +297,44 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         marginVertical: 6,
         width: '100%',
-
+        // borderStyle: "solid",
+        // borderWidth: 2,
+        // borderColor: "red"
     },
     titleSection: {
         flexGrow: 5,
         marginHorizontal: 20,
         fontSize: 20,
-        fontWeight: "bold"
+        fontWeight: "bold",
+
     },
     closeButtonSection: {
         marginHorizontal: 20,
         marginVertical: 20,
+
     },
     closeButton: {
         flexGrow: 0,
-        marginHorizontal: 25,
+        marginHorizontal: 10,
         fontSize: 20,
         fontWeight: 'bolder',
+        // borderWidth: 1,
+        alignItems:"center",
+        justifyContent: "center",
+
     },
     bodyModal: {
         paddingHorizontal: 20,
         ///flex: 20,
-        height: "100%"
+        height: "100%",
+        // borderWidth: 1,
+        // overflow:"hidden"
+    },
+
+    stepsWrapper: {
+        width: "100%",
+        height: 500,
+        overflow: "scroll"
     },
     listItem: {
         //  paddingLeft: 8,
@@ -288,42 +342,77 @@ const styles = StyleSheet.create({
         //flex: 1,
         flexDirection: 'row',
         // minHeight: 60
+        // borderWidth: 1,
+        // height: 40,
+        flex:1,
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 7
+
     },
     textItem: {
         alignSelf: 'flex-start',
         fontSize: 15,
         flex: 8,
+        // borderWidth: 2,
+        // height: 'auto'
     },
     iconItem: {
         flex: 1,
         /// justifyContent:'flex-start',
-        flexDirection: "row"
+        flexDirection: "row",
+        justifyContent: "center",
     },
-    iconPhone: {
-        alignItems: 'flex-end',
-        flex: 1,
+    iconText: {
+        color: "#fff",
+        marginLeft: 5
+    },
 
+    iconPick: {
+        textAlign: "center",
+        paddingVertical: 15,
+        paddingHorizontal: 13
+    },
+    iconGender : {
+        paddingVertical: 13
+    },
+
+    iconPhone: {
+        // alignItems: 'center',
+        // justifyContent: "flex-end",
+        // flex: 2,
+        // borderWidth: 2,
+        paddingLeft: 10
+    },
+
+    iconsWrapper: {
+        width: "100%",
+        // borderWidth: 1,
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        paddingLeft: "5%"
     },
     iconsSection: {
-        ///flex: 1,
         alignSelf: 'flex-start',
-        //flexWrap: 'wrap',
         flexDirection: "row",
-        paddingHorizontal: 20
+        paddingHorizontal: 15,
+        width: "95%",
+        height: 50,
+        borderRadius: 9,
+        backgroundColor: "#373737"
     },
     iconView: {
-        alignSelf: 'flex-start',
         fontSize: 15,
         flex: 1,
-        /// justifyContent: "flex-start",
-        marginHorizontal: 5,
-        ///flexWrap: 'wrap',
-
+        backgroundColor: "#373737",
+        width: 100,
+        height: "100%",
+        justifyContent: "center",
+        alignItems: "center",
+        color: "#fff",
     },
     address: {
-        borderColor: '#070A52',
-        borderLeftWidth: 1,
-        ///paddingVertical:10,
         paddingHorizontal: 10,
         marginBottom: 10
     },
@@ -331,12 +420,45 @@ const styles = StyleSheet.create({
         padding: 25,
         flexDirection: 'row',
         // flex:1,
-        alignSelf: 'center',
-
+        // alignSelf: 'center',
+        // borderWidth: 1,
+        marginTop: 30,
+        backgroundColor: "#373737",
+        borderRadius: 9,
+        width: "98%"
     },
     step: {
         textAlign: "center",
         marginBottom: 10
-    }
+    },
 
+    addressCard : {
+        width: "98%",
+        height: 30,
+        flex: 1,
+        // borderWidth: 1,
+        paddingLeft: 10,
+        padding: 2
+    },
+
+    textCard : {
+        marginTop: 4
+    },
+
+    separatorCard : {
+        width: "80%"
+    },
+
+    mapButton: {
+        borderLeftWidth: 2,
+        borderLeftColor : "#fff",
+        paddingLeft: 15,
+        marginLeft: 30
+    },
+
+    buttonText : {
+        color: "#fff",
+        textAlign: 'center',
+        marginTop: 8
+    }
 });

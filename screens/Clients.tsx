@@ -264,7 +264,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: RED_COLOR,
-
     },
     searchIcon: {
         display: "flex",
