@@ -105,26 +105,26 @@ export default function Clients({navigation}: any) {
             <SafeAreaView>
                 <View style={styles.upperHeader}>
                     <View style={styles.searchContainer}>
-                        <View style={styles.searchIcon}>
-                            <View style={styles.searchIconView}>
-                                <Icon name="search" size={30} onPress={handleSubmit(handlerSearch)}
-                                      color={'white'}/>
-                            </View>
-                        </View>
+
                         <View style={styles.searchInput}>
                             <Input
                                 placeholder="Search"
                                 /// placeholderTextColor="rgba(255, 255, 255, 0.8)"
-                                ///  style={styles.searchInput}
+                                // style={styles.searchInput}
                                 control={control} name={'search'} secureTextEntry={false}/>
                         </View>
-
+                        <View style={styles.searchIcon}>
+                            <View style={styles.searchIconView}>
+                                <Icon name="search" size={20} onPress={handleSubmit(handlerSearch)}
+                                      color={'black'} />
+                            </View>
+                        </View>
                     </View>
 
                     <View style={styles.notification}>
                         <View style={styles.searchIconView}>
-                            <Icon name="bell-o" size={30}
-                                  color={'white'}/>
+                            <Icon name="bell-o" size={20}
+                                  color={'black'}/>
                         </View>
                     </View>
                     <View style={styles.profile}>
@@ -138,7 +138,7 @@ export default function Clients({navigation}: any) {
             </SafeAreaView>
 
             <SwipeListView
-                //  style={styles.container}
+                 style={styles.containerInfo}
                 data={dataClient}
                 keyExtractor={(item) => item.id.toString()}
                 refreshControl={
@@ -227,7 +227,10 @@ export default function Clients({navigation}: any) {
                             </Text>
                             <View style={styles.listTextContainer}>
                                 <Text style={styles.listTextContainerText}>
-                                    <Icon name='clock-o' size={15} color={'black'}/>
+                                    <View style={{paddingRight: 5}}>
+                                        <Icon name='clock-o' size={15} color={'black'}/>
+                                    </View>
+
                                     {timestampToDate(item.date_of_service)} {pickUp}
                                 </Text>
                                 <Text style={styles.listTextContainerText}>|</Text>
@@ -264,6 +267,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: RED_COLOR,
+        paddingLeft: 2,
+        paddingRight: 2,
     },
     searchIcon: {
         display: "flex",
@@ -271,13 +276,14 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         alignItems: 'flex-start',
         // height:40,
+        paddingLeft: 12
 
     },
     notification: {
         paddingHorizontal: 10
     },
     profile: {
-        paddingRight: 10
+        paddingRight: 10,
     },
     searchIconView: {
         alignItems: 'center',
@@ -298,6 +304,10 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginTop: 10
     },
+    containerInfo: {
+      marginTop: 20
+    },
+
     rowBack: {
         alignItems: 'center',
         backgroundColor: 'transparent',
@@ -305,7 +315,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginHorizontal: 2,
-        marginTop: 25
+        marginTop: 6
     },
     backRightBtn: {
         alignItems: 'center',
@@ -330,6 +340,8 @@ const styles = StyleSheet.create({
         flexWrap: "wrap",
         alignItems: 'flex-end',
     },
+
+
 
     rowBackText: {
         borderWidth: 1,
@@ -371,17 +383,28 @@ const styles = StyleSheet.create({
     },
 
     upperHeader: {
+        width: "98%",
         flexDirection: 'row',
         alignItems: 'center',
-        //paddingHorizontal: 10,
+        paddingHorizontal: 10,
         height: 50,
-        paddingBottom: 15,
+        // paddingBottom: 15,
+        backgroundColor: "#fff",
+        borderRadius: 14,
+        marginLeft: "1%",
+        marginTop: 10,
+        elevation: 2,
+        shadowColor: '#000',
+        shadowOffset: { width: 6, height: 1 },
+        shadowOpacity: 0.6,
+        shadowRadius: 7,
+
     },
     searchContainer: {
         flex: 1,
         flexDirection: "row",
         backgroundColor: 'transparent',
-        paddingLeft: 10
+        // paddingLeft: 10
     },
     bell: {
         width: 16,
@@ -401,7 +424,10 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         paddingVertical: 0,
         paddingLeft: 5,
+        borderColor: "blue",
         height: 35,
+
+
     },
 
     listTextContainer: {

@@ -99,11 +99,21 @@ export default function ModalScreen({navigation, route}: any) {
                             <Icon name="male" style={styles.iconItem} size={20} color={iconColor}/> :
                             <Icon name="female" style={styles.iconItem} size={20} color={iconColor}/>}
                         </View>
+
                         <View style={[styles.iconItem, styles.iconView]}>
                             <Icon2 name="arrows-alt-v" size={20} color={iconColor}/>
                             <Text style={styles.iconText}>
                                 {clientById.height ? clientById.height : 0}
                             </Text>
+                        </View>
+                        <View style={[styles.iconItem, styles.iconView]}>
+                            {/*<Icon name={"fa-stretcher"} size={20} color={iconColor}/>*/}
+                        </View>
+                        <View style={[styles.iconItem, styles.iconView]}>
+                            {/*<Icon name={"fa-stretcher"} size={20} color={iconColor}/>*/}
+                        </View>
+                        <View style={[styles.iconItem, styles.iconView]}>
+                            {/*<Icon name={"fa-stretcher"} size={20} color={iconColor}/>*/}
                         </View>
                         <View style={[styles.iconItem, styles.iconView]}>
                             <Icon2 name="weight" size={20} color={iconColor}/>
@@ -417,7 +427,9 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     buttonIcons: {
-        padding: 25,
+        // padding: 25,
+        // paddingHorizontal: 25,
+        // paddingVertical:  25,
         flexDirection: 'row',
         // flex:1,
         // alignSelf: 'center',
