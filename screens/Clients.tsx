@@ -295,7 +295,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-evenly',
         height: 150,
         marginVertical: 1,
-        borderRadius: 10
+        borderRadius: 10,
+        marginTop: 10
     },
     rowBack: {
         alignItems: 'center',
@@ -304,6 +305,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginHorizontal: 2,
+        marginTop: 25
     },
     backRightBtn: {
         alignItems: 'center',
