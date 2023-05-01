@@ -9,6 +9,7 @@ import {useDispatch} from "react-redux";
 import {useFocusEffect} from '@react-navigation/native';
 import {openNotification} from "../utils";
 import {IClientData} from "../types/client";
+import useDeviceSize from "../hooks/useDeviceSize";
 
 
 const iconColor = '#D63D3D';
@@ -17,7 +18,7 @@ export default function ModalScreen({navigation, route}: any) {
     const dispatch = useDispatch();
     // const client = useSelector(getClientData);
     //  const {clientById} = client;
-
+    const size = useDeviceSize()
     const [clientById, setData] = useState(IClientData)
     // console.log('1111')
     // useFocusEffect(() => {
@@ -34,7 +35,7 @@ export default function ModalScreen({navigation, route}: any) {
         React.useCallback(() => {
             (async () => {
                 const clientData: any = await ClientApi.getClientData(clientId)
-                console.log(clientData, 22222)
+                // console.log(clientData, 22222)
                 setData(clientData.client)
                 //  dispatch(clientAction.fetching({clientById: clientData.client}))
             })();
@@ -75,11 +76,12 @@ export default function ModalScreen({navigation, route}: any) {
     const handlerDone = async (id: number) => {
         const clientData = await ClientApi.doneTrip(clientId)
     }
-    console.log(clientById, 'clientById')
+    // console.log(clientById, 'clientById')
     // @ts-ignore
     return (
         <View style={styles.container}>
-            <ScrollView style={styles.scrollView}>
+            {/*<Icon name={"stretcher"} size={30} color={"red"}/>*/}
+            <ScrollView style={size.width < 380 ? styles.scrollViewSe : styles.scrollView}>
                 <View style={styles.title}>
                     <View style={styles.header}>
                         <Text style={styles.titleSection}>{clientById.fullName}</Text>
@@ -131,7 +133,7 @@ export default function ModalScreen({navigation, route}: any) {
                 <View style={[styles.separator, styles.separatorCard]} lightColor="#070A52" darkColor="rgba(255,255,255,0.1)"/>
 
                 <View style={styles.bodyModal}>
-                    <View  style={styles.stepsWrapper}>
+                    <View  style={ size.width < 380 ? styles.stepsWrapperS : size.width > 500 ? styles.stepsWrapperP : styles.stepsWrapper}>
                         <ScrollView>
                             <View style={[styles.listItem, styles.addressCard]}>
                                 <Icon name="address-card-o" style={styles.iconItem} size={25} color={iconColor}/>
@@ -203,35 +205,31 @@ export default function ModalScreen({navigation, route}: any) {
 
 
                     </View>
-
-
                     <View style={styles.buttonIcons}>
+                        <View style={styles.routeButtons}>
+                            <TouchableOpacity style={styles.closeButton}
+                                              onPress={() => handlerAction(1)}>
+                                <Icon name="play-circle-o" style={styles.iconItem} size={30} color={iconColor}/>
+                                <Text style={styles.buttonText}>Start Trip</Text>
+                            </TouchableOpacity>
 
-
-
-                        <TouchableOpacity style={styles.closeButton}
-                                          onPress={() => handlerAction(1)}>
-                            <Icon name="play-circle-o" style={styles.iconItem} size={30} color={iconColor}/>
-                            <Text style={styles.buttonText}>Start Trip</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity style={styles.closeButton}
-                                          onPress={() => handlerAction(2)}>
-                            <Icon name="check-circle-o" style={styles.iconItem} size={30} color={iconColor}/>
-                            <Text style={styles.buttonText}>Done Trip</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.closeButton}
-                                          onPress={() => {
-                                              navigation.goBack();
-                                              navigation.navigate('DriverRoute', {
-                                                  id: clientId
-                                              })
-                                          }}>
-                            <Icon name="ban" style={styles.iconItem} size={30} color={iconColor}/>
-                            <Text style={styles.buttonText}>On Hold</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity style={[styles.closeButton, styles.mapButton]}
+                            <TouchableOpacity style={[styles.closeButton, styles.routeIcons]}
+                                              onPress={() => handlerAction(2)}>
+                                <Icon name="check-circle-o" style={styles.iconItem} size={30} color={iconColor}/>
+                                <Text style={styles.buttonText}>Done Trip</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={[styles.closeButton, styles.routeIcons]}
+                                              onPress={() => {
+                                                  navigation.goBack();
+                                                  navigation.navigate('DriverRoute', {
+                                                      id: clientId
+                                                  })
+                                              }}>
+                                <Icon name="ban" style={styles.iconItem} size={30} color={iconColor}/>
+                                <Text style={styles.buttonText}>On Hold</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <TouchableOpacity style={[styles.closeButton, styles.mapButton, size.width < 380 ? {flexGrow: 1.5} : size.width < 500 ? {flexGrow: 0.5} : {}]}
                                           onPress={() => {
                                               navigation.goBack();
                                               navigation.navigate('DriverRoute', {
@@ -255,7 +253,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         display: "flex",
-        paddingTop: 15,
+        // paddingTop: 15,
         height: "100%",
         /// overflow:"scroll",
         // height:100
@@ -267,6 +265,11 @@ const styles = StyleSheet.create({
     scrollView: {
         marginTop:50,
     },
+
+    scrollViewSe: {
+        marginTop:20
+    },
+
     header: {
         flex: 1,
         marginVertical: 20,
@@ -321,17 +324,22 @@ const styles = StyleSheet.create({
     closeButtonSection: {
         marginHorizontal: 20,
         marginVertical: 20,
-
+        // borderWidth: 1
     },
     closeButton: {
-        flexGrow: 0,
-        marginHorizontal: 10,
+        // marginHorizontal: 10,
         fontSize: 20,
+        marginLeft: 10,
         fontWeight: 'bolder',
-        // borderWidth: 1,
         alignItems:"center",
         justifyContent: "center",
-
+        padding: 2,
+    },
+    routeIcons: {
+        marginLeft: 15,
+    },
+    stepsWrapperS: {
+      height: 350,
     },
     bodyModal: {
         paddingHorizontal: 20,
@@ -343,8 +351,16 @@ const styles = StyleSheet.create({
 
     stepsWrapper: {
         width: "100%",
-        height: 500,
+        height: 550,
         overflow: "scroll"
+    },
+
+    stepsWrapperP: {
+      height: 800
+    },
+
+    stepsWrapperSe:{
+        height: 300
     },
     listItem: {
         //  paddingLeft: 8,
@@ -403,6 +419,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         paddingLeft: "5%"
     },
+
     iconsSection: {
         alignSelf: 'flex-start',
         flexDirection: "row",
@@ -427,17 +444,16 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     buttonIcons: {
-        // padding: 25,
-        // paddingHorizontal: 25,
-        // paddingVertical:  25,
+        paddingVertical:  10,
         flexDirection: 'row',
+        justifyContent: "space-between",
         // flex:1,
         // alignSelf: 'center',
         // borderWidth: 1,
         marginTop: 30,
         backgroundColor: "#373737",
         borderRadius: 9,
-        width: "98%"
+        width: "100%"
     },
     step: {
         textAlign: "center",
@@ -464,13 +480,19 @@ const styles = StyleSheet.create({
     mapButton: {
         borderLeftWidth: 2,
         borderLeftColor : "#fff",
-        paddingLeft: 15,
-        marginLeft: 30
+        // paddingLeft: 15,
+        marginLeft: 30,
+        flexGrow: 0.2,
     },
 
     buttonText : {
         color: "#fff",
         textAlign: 'center',
         marginTop: 8
+    },
+
+    routeButtons: {
+        flexDirection: "row",
+        backgroundColor: "transparent",
     }
 });

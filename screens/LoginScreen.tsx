@@ -62,7 +62,9 @@ const Login = () => {
 };
 const styles = StyleSheet.create({
     root: {
+        height: "100%",
         alignItems: "center",
+        justifyContent: "center",
         padding: 40,
     },
     logo: {
@@ -73,6 +75,8 @@ const styles = StyleSheet.create({
     input:{
         height: 40,
         width:"100%",
+        // maxWidth: 300,
+        // maxHeight: 200,
         marginVertical:10
     },
 })
