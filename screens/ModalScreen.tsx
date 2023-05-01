@@ -351,7 +351,7 @@ const styles = StyleSheet.create({
 
     stepsWrapper: {
         width: "100%",
-        height: 550,
+        height: 490,
         overflow: "scroll"
     },
 
