@@ -3,11 +3,12 @@ import {Dimensions, StyleSheet, Text, TouchableOpacity, View,} from "react-nativ
 
 import {GOOGLE_API_KEY} from "../environments";
 import Constants from "expo-constants";
-import {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import MapViewDirections from "react-native-maps-directions";
 import Geocoder from 'react-native-geocoding';
 import {ClientApi} from "../api/client";
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {useFocusEffect} from "@react-navigation/native";
 
 const iconColor = '#D63D3D';
 export default function RouteScreen({navigation, route}: any) {
@@ -36,15 +37,27 @@ export default function RouteScreen({navigation, route}: any) {
         bottom: edgePaddingValue,
         left: edgePaddingValue,
     };
+    useFocusEffect(
+        React.useCallback(() => {
+            (async () => {
+                const clientData = await ClientApi.getClientRoute(id)
+                console.log(clientData, '333333ååå')
+                /// setData(clientData.client)
+                await traceRoute(clientData)
+                //  dispatch(clientAction.fetching({clientById: clientData.client}))
+            })();
 
-    useEffect(() => {
-        (async () => {
-            const clientData = await ClientApi.getClientRoute(id)
-            console.log(clientData, '333333ååå')
-            /// setData(clientData.client)
-            await traceRoute(clientData)
-        })()
-    }, [])
+            //  return () => clientData();
+        }, [])
+    );
+    // useEffect(() => {
+    //     (async () => {
+    //         const clientData = await ClientApi.getClientRoute(id)
+    //         console.log(clientData, '333333ååå')
+    //         /// setData(clientData.client)
+    //         await traceRoute(clientData)
+    //     })()
+    // }, [])
     const traceRouteOnReady = (args: any) => {
         if (args) {
             console.log(args, 'argsargs')
@@ -58,28 +71,31 @@ export default function RouteScreen({navigation, route}: any) {
 
 
         console.log(route, 'routeroute')
-        setData(route)
-        for (const item of route.waypoint) {
-            console.log(item,'item')
-            await Geocoder.from(item)
-                .then(json => {
-                    var location = json.results[0].geometry.location;
-                    setWaypoints((state: any) => {
-                        return [
-                            ...state, {location:location , address : item}
-                        ]
+        if(route.waypoint && route.waypoint.length > 0){
+            for (const item of route.waypoint) {
+                console.log(item,'item')
+                await Geocoder.from(item)
+                    .then(json => {
+                        console.log(json,'json')
+                        var location = json.results[0].geometry.location;
+                        setWaypoints((state: any) => {
+                            return [
+                                ...state, {location:location , address : item}
+                            ]
+                        })
                     })
-                })
-                .catch(error => console.warn(error));
+                    .catch(error => console.warn(error));
+            }
         }
+
 
         ///   setWaypoints(route.waypoint)
         const dataTo = await Geocoder.from(route.origin)
         const datafrom = await Geocoder.from(route.destination)
-
         var locationFrom = dataTo.results[0].geometry.location;
         var locationTO = datafrom.results[0].geometry.location;
 
+        setData(route)
         setDestination({
             latitude: locationTO.lat,
             longitude: locationTO.lng
@@ -97,10 +113,11 @@ export default function RouteScreen({navigation, route}: any) {
             latitude: locationTO.lat,
             longitude: locationTO.lng
         }], {edgePadding});
+
     };
 
-
-    return data && waypoints.length> 0&& (
+    console.log(destination,'destination')
+    return Object.keys(data).length > 0  && (
         <View style={styles.container}>
             <MapView
                 ref={mapRef}

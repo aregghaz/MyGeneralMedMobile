@@ -76,8 +76,7 @@ export default function ModalScreen({navigation, route}: any) {
     const handlerDone = async (id: number) => {
         const clientData = await ClientApi.doneTrip(clientId)
     }
-    // console.log(clientById, 'clientById')
-    // @ts-ignore
+
     return (
         <View style={styles.container}>
             {/*<Icon name={"stretcher"} size={30} color={"red"}/>*/}
@@ -86,6 +85,9 @@ export default function ModalScreen({navigation, route}: any) {
                     <View style={styles.header}>
                         <Text style={styles.titleSection}>{clientById.fullName}</Text>
                         <Text style={styles.titleSmallSection}>{clientById.trip_id}</Text>
+                        <Text style={styles.titleSmallSection}>
+                            {clientById.los}
+                        </Text>
                     </View>
                     <View style={styles.closeButtonSection}>
                         <TouchableOpacity style={styles.closeButton}
@@ -108,15 +110,15 @@ export default function ModalScreen({navigation, route}: any) {
                                 {clientById.height ? clientById.height : 0}
                             </Text>
                         </View>
-                        <View style={[styles.iconItem, styles.iconView]}>
-                            {/*<Icon name={"fa-stretcher"} size={20} color={iconColor}/>*/}
-                        </View>
-                        <View style={[styles.iconItem, styles.iconView]}>
-                            {/*<Icon name={"fa-stretcher"} size={20} color={iconColor}/>*/}
-                        </View>
-                        <View style={[styles.iconItem, styles.iconView]}>
-                            {/*<Icon name={"fa-stretcher"} size={20} color={iconColor}/>*/}
-                        </View>
+                        {/*<View style={[styles.iconItem, styles.iconView]}>*/}
+                        {/*    /!*<Icon name={"fa-stretcher"} size={20} color={iconColor}/>*!/*/}
+                        {/*</View>*/}
+                        {/*<View style={[styles.iconItem, styles.iconView]}>*/}
+                        {/*    /!*<Icon name={"fa-stretcher"} size={20} color={iconColor}/>*!/*/}
+                        {/*</View>*/}
+                        {/*<View style={[styles.iconItem, styles.iconView]}>*/}
+                        {/*    /!*<Icon name={"fa-stretcher"} size={20} color={iconColor}/>*!/*/}
+                        {/*</View>*/}
                         <View style={[styles.iconItem, styles.iconView]}>
                             <Icon2 name="weight" size={20} color={iconColor}/>
                             <Text style={styles.iconText}>
@@ -444,13 +446,13 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     buttonIcons: {
-        paddingVertical:  10,
+        paddingVertical:  5,
         flexDirection: 'row',
         justifyContent: "space-between",
         // flex:1,
         // alignSelf: 'center',
         // borderWidth: 1,
-        marginTop: 30,
+        marginTop: 10,
         backgroundColor: "#373737",
         borderRadius: 9,
         width: "100%"

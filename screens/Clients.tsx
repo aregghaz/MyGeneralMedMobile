@@ -54,8 +54,9 @@ export default function Clients({navigation}: any) {
 
     const getTripData = async () => {
         const clientData = await ClientApi.getClientsData(query)
-        console.log(clientData,'clientData')
+        console.log(clientData, 'clientData')
         setData(clientData.clients);
+        setRefreshing(false);
     }
     const onRefresh = React.useCallback(async () => {
             setRefreshing(true);
@@ -116,7 +117,7 @@ export default function Clients({navigation}: any) {
                         <View style={styles.searchIcon}>
                             <View style={styles.searchIconView}>
                                 <Icon name="search" size={20} onPress={handleSubmit(handlerSearch)}
-                                      color={'black'} />
+                                      color={'black'}/>
                             </View>
                         </View>
                     </View>
@@ -138,7 +139,7 @@ export default function Clients({navigation}: any) {
             </SafeAreaView>
 
             <SwipeListView
-                 style={styles.containerInfo}
+                style={styles.containerInfo}
                 data={dataClient}
                 keyExtractor={(item) => item.id.toString()}
                 refreshControl={
@@ -225,6 +226,9 @@ export default function Clients({navigation}: any) {
                                 {item.fullName}
                                 <Text style={styles.tripId}> {item.trip_id}</Text>
                             </Text>
+                            <Text style={styles.listTextContainerText}>
+                                {item.los}
+                            </Text>
                             <View style={styles.listTextContainer}>
                                 <Text style={styles.listTextContainerText}>
                                     <View style={{paddingRight: 5}}>
@@ -232,10 +236,6 @@ export default function Clients({navigation}: any) {
                                     </View>
 
                                     {timestampToDate(item.date_of_service)} {pickUp}
-                                </Text>
-                                <Text style={styles.listTextContainerText}>|</Text>
-                                <Text style={styles.listTextContainerText}>
-                                    {item.los}
                                 </Text>
                                 <Text style={styles.listTextContainerText}>|</Text>
                                 <Text style={styles.listTextContainerText}>
@@ -249,8 +249,9 @@ export default function Clients({navigation}: any) {
                                 </Text>
                             </View>
 
-                            <Text style={[styles.listText, styles.listTextOrigin]}><Icon name="map-marker" size={20}
-                                                                                         color={"black"}/> {item.address}.
+                            <Text style={[styles.listText, styles.listTextOrigin]}>
+                                <Icon name="map-marker" size={20} color={"black"}/>{' '}
+                                {item.address}.
                             </Text>
                             {/*<Text style={[styles.listText, styles.listTextOrigin]}><Icon name="map-pin" size={20} color={"black"}/> {item.destination}</Text>*/}
                         </View>
@@ -305,7 +306,7 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     containerInfo: {
-      marginTop: 20
+        marginTop: 20
     },
 
     rowBack: {
@@ -340,7 +341,6 @@ const styles = StyleSheet.create({
         flexWrap: "wrap",
         alignItems: 'flex-end',
     },
-
 
 
     rowBackText: {
@@ -395,7 +395,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         elevation: 2,
         shadowColor: '#000',
-        shadowOffset: { width: 6, height: 1 },
+        shadowOffset: {width: 6, height: 1},
         shadowOpacity: 0.6,
         shadowRadius: 7,
 

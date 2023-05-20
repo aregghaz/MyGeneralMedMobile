@@ -32,6 +32,7 @@ export const IClientData = {
     status: 0,
     height: 0,
     weight: 0,
+    los:'',
     type_of_trip: 0,
     miles: 0,
     member_uniqie_identifer: 0,

@@ -64,8 +64,9 @@ const styles = StyleSheet.create({
     root: {
         height: "100%",
         alignItems: "center",
-        justifyContent: "center",
-        padding: 40,
+    //    justifyContent: "center",
+        paddingHorizontal:  40,
+        paddingTop:150
     },
     logo: {
         width: "70%",
