@@ -1,4 +1,4 @@
-package com.aregghaz.mygeneralmedapp;
+package com.calcarela.calcarela;
 
 import android.os.Build;
 import android.os.Bundle;

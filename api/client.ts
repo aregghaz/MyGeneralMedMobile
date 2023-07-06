@@ -5,7 +5,6 @@ import {fakeUrl} from "./fakeUrl";
 
 export const ClientApi = {
     getClientsData(query:any) {
-        console.log(`${fakeUrl}/api/clients-data-driver`)
         return axios.post(`${fakeUrl}/api/clients-data-driver`, query).then(res => res.data)
     },
     getClientData(id:number) {
@@ -19,5 +18,8 @@ export const ClientApi = {
     },
     doneTrip(id:number) {
         return axios.get(`${fakeUrl}/api/done-trip/${id}`).then(res => res.data)
+    },
+    getDriverData() {
+        return axios.get(`${fakeUrl}/api/get-driver-data`).then(res => res.data)
     },
 }

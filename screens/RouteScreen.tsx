@@ -41,7 +41,6 @@ export default function RouteScreen({navigation, route}: any) {
         React.useCallback(() => {
             (async () => {
                 const clientData = await ClientApi.getClientRoute(id)
-                console.log(clientData, '333333ååå')
                 /// setData(clientData.client)
                 await traceRoute(clientData)
                 //  dispatch(clientAction.fetching({clientById: clientData.client}))
@@ -60,7 +59,6 @@ export default function RouteScreen({navigation, route}: any) {
     // }, [])
     const traceRouteOnReady = (args: any) => {
         if (args) {
-            console.log(args, 'argsargs')
             setDistance(args.distance/ 1.6);
             setDuration(args.duration);
         }
@@ -68,15 +66,10 @@ export default function RouteScreen({navigation, route}: any) {
 
     const traceRoute = async (route: { origin: string, origin_id: string, destination_id: string, destination: string, waypoint: Array<any> }) => {
         Geocoder.init(GOOGLE_API_KEY);
-
-
-        console.log(route, 'routeroute')
         if(route.waypoint && route.waypoint.length > 0){
             for (const item of route.waypoint) {
-                console.log(item,'item')
                 await Geocoder.from(item)
                     .then(json => {
-                        console.log(json,'json')
                         var location = json.results[0].geometry.location;
                         setWaypoints((state: any) => {
                             return [
@@ -116,7 +109,6 @@ export default function RouteScreen({navigation, route}: any) {
 
     };
 
-    console.log(destination,'destination')
     return Object.keys(data).length > 0  && (
         <View style={styles.container}>
             <MapView
@@ -134,7 +126,6 @@ export default function RouteScreen({navigation, route}: any) {
                                    description={data.origin}
                                    coordinate={origin}/>}
                 {waypoints.map((item: any, index:number) => {
-                    console.log(item, 'itemitemitemitem')
                     return (<Marker title={`Step ${index+1}`}
                                     description={`${item.address}`}
                                     coordinate={{latitude :item.location.lat, longitude: item.location.lng}}/>)

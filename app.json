@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "mygeneralmed",
-    "slug": "mygeneralmedapp",
-    "owner": "mygeneralmed",
+    "name": "calcarela",
+    "slug": "calcareapp",
+    "owner": "calcare",
     "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -21,22 +21,22 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.aregghaz.mygeneralmedapp",
-      "buildNumber" : "2"
+      "bundleIdentifier": "com.calcarela.calcarela",
+      "buildNumber": "2"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.aregghaz.mygeneralmedapp"
+      "package": "com.calcarela.calcarela"
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "a1529bb9-603f-4851-81b2-e7c1ce63b955"
+        "projectId": "e25432d8-65b0-4399-b7de-bbc6826d0e6d"
       }
     }
   }

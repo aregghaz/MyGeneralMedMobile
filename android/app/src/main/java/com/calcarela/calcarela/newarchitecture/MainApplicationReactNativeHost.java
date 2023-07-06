@@ -1,4 +1,4 @@
-package com.aregghaz.mygeneralmedapp.newarchitecture;
+package com.calcarela.calcarela.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -20,9 +20,9 @@ import com.facebook.react.fabric.EmptyReactNativeConfig;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.aregghaz.mygeneralmedapp.BuildConfig;
-import com.aregghaz.mygeneralmedapp.newarchitecture.components.MainComponentsRegistry;
-import com.aregghaz.mygeneralmedapp.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.calcarela.calcarela.BuildConfig;
+import com.calcarela.calcarela.newarchitecture.components.MainComponentsRegistry;
+import com.calcarela.calcarela.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

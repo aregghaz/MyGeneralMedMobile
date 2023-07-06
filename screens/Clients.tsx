@@ -20,6 +20,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import Input from "../components/input/input";
 import {useForm} from "react-hook-form";
 import {useFocusEffect} from "@react-navigation/native";
+import {fakeUrl} from "../api/fakeUrl";
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 
@@ -32,6 +33,7 @@ const BORDER_RADIUS = 7;
 export default function Clients({navigation}: any) {
     const animatedValue = useRef(new Animated.Value(0)).current;
     const [dataClient, setData] = useState<Array<IClient>>([])
+    const [dataDriver, setDriver] = useState('../assets/images/avatar.png')
     const [loading, setLoading] = useState<boolean>(false)
     const [query, setQuery] = useState<string>('')
 
@@ -39,6 +41,7 @@ export default function Clients({navigation}: any) {
     useFocusEffect(
         React.useCallback(() => {
             (async () => {
+                await getUserData();
                 await getTripData();
                 setRefreshing(false)
             })();
@@ -54,9 +57,12 @@ export default function Clients({navigation}: any) {
 
     const getTripData = async () => {
         const clientData = await ClientApi.getClientsData(query)
-        console.log(clientData, 'clientData')
         setData(clientData.clients);
         setRefreshing(false);
+    }
+    const getUserData = async () => {
+        const driverData = await ClientApi.getDriverData();
+        setDriver(`${fakeUrl}${driverData.picture}`)
     }
     const onRefresh = React.useCallback(async () => {
             setRefreshing(true);
@@ -130,7 +136,7 @@ export default function Clients({navigation}: any) {
                     </View>
                     <View style={styles.profile}>
                         <Image
-                            source={require('../assets/images/avatar.png')}
+                            source={{uri:dataDriver }}
                             style={styles.avatar}
                         />
                     </View>
@@ -414,6 +420,7 @@ const styles = StyleSheet.create({
     avatar: {
         width: 28,
         height: 28,
+        borderRadius:15
     },
 
     searchInput: {
@@ -440,7 +447,7 @@ const styles = StyleSheet.create({
         marginRight: 5,
         fontWeight: "500",
         fontSize: 15,
-        wordSpacing: 15,
+        // wordSpacing: 15,
     },
 
     listText: {},
