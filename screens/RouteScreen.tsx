@@ -9,6 +9,7 @@ import Geocoder from 'react-native-geocoding';
 import {ClientApi} from "../api/client";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useFocusEffect} from "@react-navigation/native";
+import * as Location from 'expo-location';
 
 const iconColor = '#D63D3D';
 export default function RouteScreen({navigation, route}: any) {
@@ -28,7 +29,6 @@ export default function RouteScreen({navigation, route}: any) {
     });
     const mapRef = useRef<MapView>(null);
 
-
     const edgePaddingValue = 70;
 
     const edgePadding = {
@@ -41,8 +41,16 @@ export default function RouteScreen({navigation, route}: any) {
         React.useCallback(() => {
             (async () => {
                 const clientData = await ClientApi.getClientRoute(id)
-                /// setData(clientData.client)
-                await traceRoute(clientData)
+
+                let { status } = await Location.requestForegroundPermissionsAsync();
+                if (status !== 'granted') {
+                    console.warn('Permission to access location was denied')
+                    return;
+                }
+
+                let location = await Location.getCurrentPositionAsync({});
+
+                await traceRoute(clientData,location)
                 //  dispatch(clientAction.fetching({clientById: clientData.client}))
             })();
 
@@ -64,13 +72,25 @@ export default function RouteScreen({navigation, route}: any) {
         }
     };
 
-    const traceRoute = async (route: { origin: string, origin_id: string, destination_id: string, destination: string, waypoint: Array<any> }) => {
+    const traceRoute = async (route: { origin: string, origin_id: string, destination_id: string, destination: string, waypoint: Array<any> }, location:any) => {
         Geocoder.init(GOOGLE_API_KEY);
+        console.log(route.waypoint && route.waypoint.length > 0)
         if(route.waypoint && route.waypoint.length > 0){
+            const dataTo = await Geocoder.from(route.origin)
+            let startAddress = dataTo.results[0].geometry.location;
+            console.log(startAddress,route.origin,'startAddressstartAddress')
+            setWaypoints((state: any) => {
+                return [
+                    ...state, {location:{
+                            lat: startAddress.lat,
+                            lng: startAddress.lng
+                        } , address : route.origin}
+                ]
+            })
             for (const item of route.waypoint) {
                 await Geocoder.from(item)
                     .then(json => {
-                        var location = json.results[0].geometry.location;
+                        let location = json.results[0].geometry.location;
                         setWaypoints((state: any) => {
                             return [
                                 ...state, {location:location , address : item}
@@ -82,22 +102,26 @@ export default function RouteScreen({navigation, route}: any) {
         }
 
 
-        ///   setWaypoints(route.waypoint)
+
         const dataTo = await Geocoder.from(route.origin)
         const datafrom = await Geocoder.from(route.destination)
         var locationFrom = dataTo.results[0].geometry.location;
         var locationTO = datafrom.results[0].geometry.location;
 
         setData(route)
-        setDestination({
-            latitude: locationTO.lat,
-            longitude: locationTO.lng
-        })
         setOrigin({
+            latitude: location.coords.latitude,
+            longitude:location.coords.longitude
+        })
+        setDestination({
             latitude: locationFrom.lat,
             longitude: locationFrom.lng
         })
-
+        // setOrigin({
+        //     latitude: locationFrom.lat,
+        //     longitude: locationFrom.lng
+        // })
+        console.log(waypoints,'waypointswaypoints')
         setShowDirections(true);
         mapRef.current?.fitToCoordinates([{
             latitude: locationFrom.lat,

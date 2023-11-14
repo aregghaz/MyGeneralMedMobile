@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {StyleSheet, Text, View, Image, useWindowDimensions} from 'react-native'
 import Logo from '../assets/images/logo.png'
 import Input from "../components/input/input";
@@ -7,11 +7,14 @@ import {useNavigation} from "@react-navigation/native";
 import {useForm} from 'react-hook-form'
 import {AuthApi} from "../api/auth";
 import axios from "axios";
+import * as Location from 'expo-location';
+
 const Login = () => {
     const {height} = useWindowDimensions()
     const navigation = useNavigation()
     const [loading, setLoading] = useState(false)
     const {control, handleSubmit, formState:{errors}} = useForm()
+
     const handlerLogin = async (data: any) => {
         if(loading){
             return
@@ -26,7 +29,8 @@ const Login = () => {
          }
         setLoading(false)
     }
-    // console.warn(errors,'22222222')
+
+
     return (
         <View style={styles.root}>
             <Image
