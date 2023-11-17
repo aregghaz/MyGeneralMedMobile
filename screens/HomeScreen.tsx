@@ -30,7 +30,7 @@ const DONE = 2;
 const LOWER_HEADER_HEIGHT = 85;
 const RED_COLOR = "#D63D3D";
 const BORDER_RADIUS = 7;
-export default function Clients({navigation}: any) {
+export default function HomeScreen({navigation}: any) {
     const animatedValue = useRef(new Animated.Value(0)).current;
     const [dataClient, setData] = useState<Array<IClient>>([])
     const [dataDriver, setDriver] = useState('../assets/images/avatar.png')

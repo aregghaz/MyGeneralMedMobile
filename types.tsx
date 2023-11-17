@@ -19,7 +19,8 @@ export type RootStackParamList = {
   Modal: NavigatorScreenParams<RootTabParamList>| undefined;
   Login: undefined;
   NotFound: undefined;
-  DriverRoute: NavigatorScreenParams<RouteScreenParamList>;
+  DriverRoute: NavigatorScreenParams<RouteScreenParamList>| undefined;
+  PreRouteScreen: NavigatorScreenParams<RouteScreenParamList>| undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<

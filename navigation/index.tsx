@@ -10,13 +10,14 @@ import {useEffect, useState} from 'react';
 import {ColorSchemeName} from 'react-native';
 import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
-import Clients from '../screens/Clients';
+import HomeScreen from '../screens/HomeScreen';
 import {RootStackParamList} from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 import Login from "../screens/LoginScreen";
 import {AuthApi} from "../api/auth";
 import RouterScreen from "../screens/RouteScreen";
 import {AlertNotificationRoot} from "react-native-alert-notification";
+import PreRouteScreen from "../screens/PreRouteScreen";
 
 export default function Navigation({colorScheme}: { colorScheme: ColorSchemeName }) {
     return (
@@ -56,9 +57,10 @@ function RootNavigator({navigation}: any) {
         // <AlertNotificationRoot>
             <Stack.Navigator>
                 <Stack.Screen name="Login" component={Login} options={{headerShown: false}}/>
-                <Stack.Screen name="Home" component={Clients} options={{headerShown: false}}/>
+                <Stack.Screen name="Home" component={HomeScreen} options={{headerShown: false}}/>
                 <Stack.Screen name="NotFound" component={NotFoundScreen} options={{title: 'Oops!'}}/>
                 <Stack.Screen name="DriverRoute" component={RouterScreen} options={{headerShown: false}}/>
+                <Stack.Screen name="PreRouteScreen" component={PreRouteScreen} options={{headerShown: false}}/>
                 <Stack.Screen name="Modal" component={ModalScreen} options={{headerShown: false}}/>
 
                 {/*<Stack.Group screenOptions={{presentation: 'modal'}}>*/}
@@ -85,13 +87,13 @@ function RootNavigator({navigation}: any) {
 //     };
 //     return (
 //         <BottomTab.Navigator
-//             initialRouteName="Clients"
+//             initialRouteName="HomeScreen"
 //             screenOptions={{
 //                 tabBarActiveTintColor: Colors[colorScheme].tint,
 //             }}>
 //             <BottomTab.Screen
-//                 name="Clients"
-//                 component={Clients}
+//                 name="HomeScreen"
+//                 component={HomeScreen}
 //                 options={{headerShown:false, tabBarIcon: ({color}) => <TabClientIcon name="code" color={color}/>,}}
 //             />
 //             <BottomTab.Screen
